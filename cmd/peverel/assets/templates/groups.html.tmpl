@@ -1,0 +1,20 @@
+{{ define "groups" }}
+<div class="flex flex-row flex-wrap p-4 justify-center gap-3">
+    {{ range $id, $group := . }}
+    <div class="p-4 rounded shadow-lg flex flex-col justify-center">
+        <h4 class="font-bold text-xl mb-2">{{ $group.Name }}</h4>
+        <div hx-get="/tasks?group=none&layout=options" hx-trigger="load" hx-swap="beforeend" hx-target="#assign-task-to-{{ $id }}">
+            <select class="border-0 border-b-2 border-gray-400 mb-3 sm" id="assign-task-to-{{ $id }}" name="assign-task" hx-put="/group/{{ $id }}/assign" hx-target="#main-view" hx-swap="innerHTML">
+                <option value="" disabled selected>Assign a task...</option>
+            </select>
+        </div>
+        <div hx-get="/tasks?group={{ $id }}" hx-trigger="load" hx-swap="innerHTML"></div>
+    </div>
+    {{ end }}
+    <div class="p-4 rounded shadow-lg flex flex-col justify-center">
+        <h4 class="font-bold text-xl mb-2">No Group</h4>
+        <div hx-get="/tasks?group=none" hx-trigger="load" hx-swap="innerHTML"></div>
+    </div>
+</div>
+{{ end }}
+

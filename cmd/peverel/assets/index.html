@@ -1,0 +1,23 @@
+<html lang="en-US">
+<head>
+    <title>peverel</title>
+    <script src="https://unpkg.com/htmx.org/dist/htmx.min.js"></script>
+    <!--    <script src="https://unpkg.com/tailwindcss-jit-cdn"></script>-->
+        <script src="https://cdn.tailwindcss.com?plugins=forms,typography,aspect-ratio,line-clamp,container-queries"></script>
+<!--    <script src="https://cdn.tailwindcss.com"></script>-->
+</head>
+
+<body>
+<div class="container">
+    <nav class="flex justify-items-center items-center bg-black text-white stick top-0 w-full">
+        <div class="font-bold font-mono p-2"><a class="underline decoration-2 decoration-purple-500">peverel</a></div>
+        <div class="p-2"><button hx-post="/tasks/mock" hx-target="#main-view" hx-swap="innerHTML">create mock tasks</button></div>
+        <div class="p-2"><button hx-get="/forms/new-task" hx-target="#main-view" hx-swap="innerHTML">new task</button></div>
+        <div class="p-2"><button hx-get="/forms/new-group" hx-target="#main-view" hx-swap="innerHTML">new group</button></div>
+        <div class="p-2"><button hx-get="/tasks" hx-target="#main-view" hx-swap="innerHTML">view tasks</button></div>
+        <div class="p-2"><button hx-get="/groups" hx-target="#main-view" hx-swap="innerHTML">view groups</button></div>
+    </nav>
+    <div id="main-view"></div>
+</div>
+</body>
+</html>

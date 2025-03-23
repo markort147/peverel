@@ -1,0 +1,9 @@
+server:
+  port: 8080
+
+log:
+  level: debug
+  output: ./log/peverel.log
+
+data:
+  folder: /data

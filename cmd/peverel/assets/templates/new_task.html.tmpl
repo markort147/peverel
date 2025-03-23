@@ -1,0 +1,14 @@
+{{define "new-task"}}
+<form class="flex flex-col" hx-post="/task" hx-target="#main-view" hx-swap="innerHTML">
+    <label class="font-bold mb-2" for="name">Name</label>
+    <input class="border p-2 w-full" type="text" name="name" id="name">
+
+    <label class="font-bold mb-2"  for="description">Description</label>
+    <input class="border p-2 w-full" type="text" name="description" id="description">
+
+    <label class="font-bold mb-2" for="period">Period (days)</label>
+    <input class="border p-2 w-full" type="number" name="period" id="period">
+
+    <button class="bg-blue-500 text-white p-2" type="submit">Submit</button>
+</form>
+{{end}}

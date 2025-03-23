@@ -1,0 +1,9 @@
+{{define "new-group"}}
+<div>
+    <form hx-post="/group" hx-target="#main-view" hx-swap="innerHTML">
+        <label for="name">Name</label>
+        <input type="text" name="name" id="name">
+        <button type="submit">Submit</button>
+    </form>
+</div>
+{{end}}
