@@ -10,13 +10,14 @@ import (
 	"github.com/markort147/gopkg/ymlcfg"
 	"io"
 	"os"
-	"time"
 )
 
 //go:embed assets/*
 var assetsFS embed.FS
 
-var data Data
+var data Data = &PsqlData{}
+
+//var data Data = &MemoryData{}
 
 type Config struct {
 	Server struct {
@@ -26,6 +27,9 @@ type Config struct {
 		Level  string `yaml:"level"`
 		Output string `yaml:"output"`
 	} `yaml:"log"`
+	Database struct {
+		ConnStr string `yaml:"conn_string"`
+	} `yaml:"database"`
 }
 
 func parseLogLevel(level string) glog.Lvl {
@@ -98,7 +102,8 @@ func main() {
 		os.Exit(1)
 	}
 
-	data = NewData()
+	//data = NewMemoryData()
+	data.Init(cfg)
 
 	wgServer, err := echotmpl.StartServer(
 		&echotmpl.Config{
@@ -119,36 +124,36 @@ func main() {
 				e.POST("/tasks/mock", CreateMockTasks)
 				e.PUT("/group/:id/assign", PutGroupAssignTask)
 			},
-			CustomFuncs: echotmpl.FuncMap{
-				"NextTimeGroup": func(id GroupId) string {
-					tasks := data.Relations[id]
-					minNextDay, _ := time.Parse("2006-01-02", "9999-12-31")
-					today := time.Now()
-
-					for _, taskId := range tasks {
-						task := data.Tasks[taskId]
-						nextDay := task.LastCompleted.AddDate(0, 0, task.Period)
-						if nextDay.Before(minNextDay) {
-							minNextDay = nextDay
-						}
-					}
-
-					todayStr := today.Format("20060102")
-					nextDayStr := minNextDay.Format("20060102")
-
-					if todayStr == nextDayStr {
-						return "today"
-					}
-
-					todayTime, _ := time.Parse("20060102", todayStr)
-					nextDayTime, _ := time.Parse("20060102", nextDayStr)
-					diff := int(nextDayTime.Sub(todayTime).Hours() / 24)
-					if diff < 0 {
-						return fmt.Sprintf("%d days ago", -diff)
-					}
-					return fmt.Sprintf("%d days", diff)
-				},
-			},
+			//CustomFuncs: echotmpl.FuncMap{
+			//	"NextTimeGroup": func(id GroupId) string {
+			//		tasks := data.Relations[id]
+			//		minNextDay, _ := time.Parse("2006-01-02", "9999-12-31")
+			//		today := time.Now()
+			//
+			//		for _, taskId := range tasks {
+			//			task := data.Tasks[taskId]
+			//			nextDay := task.LastCompleted.AddDate(0, 0, task.Period)
+			//			if nextDay.Before(minNextDay) {
+			//				minNextDay = nextDay
+			//			}
+			//		}
+			//
+			//		todayStr := today.Format("20060102")
+			//		nextDayStr := minNextDay.Format("20060102")
+			//
+			//		if todayStr == nextDayStr {
+			//			return "today"
+			//		}
+			//
+			//		todayTime, _ := time.Parse("20060102", todayStr)
+			//		nextDayTime, _ := time.Parse("20060102", nextDayStr)
+			//		diff := int(nextDayTime.Sub(todayTime).Hours() / 24)
+			//		if diff < 0 {
+			//			return fmt.Sprintf("%d days ago", -diff)
+			//		}
+			//		return fmt.Sprintf("%d days", diff)
+			//	},
+			//},
 		},
 	)
 	if err != nil {

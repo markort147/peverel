@@ -24,7 +24,7 @@ func TestData(t *testing.T) {
 		Name: "Corridor",
 	}
 
-	data := NewData()
+	data := NewMemoryData()
 	t0id := data.AddTask(&task0)
 	t1id := data.AddTask(&task1)
 	g0id := data.AddGroup(&living)

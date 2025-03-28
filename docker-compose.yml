@@ -1,0 +1,27 @@
+services:
+  db:
+    image: postgres:latest
+    container_name: peverel_db
+    environment:
+      POSTGRES_USER: peverel
+      POSTGRES_PASSWORD: peverel
+      POSTGRES_DB: peverel
+    volumes:
+      - peverel_data:/var/lib/postgresql/data
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+    expose:
+      - "5432"
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      no_cache: true
+    container_name: peverel_app
+    ports:
+      - "8081:8080"
+    depends_on:
+      - db
+
+volumes:
+  peverel_data:

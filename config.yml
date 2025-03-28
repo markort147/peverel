@@ -3,7 +3,7 @@ server:
 
 log:
   level: debug
-  output: ./log/peverel.log
+  output: stdout
 
-data:
-  folder: /data
+database:
+  conn_string: postgresql://peverel:peverel@db/peverel?sslmode=disable
