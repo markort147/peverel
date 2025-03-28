@@ -11,10 +11,9 @@ type PsqlData struct {
 	*sql.DB
 }
 
-func (p *PsqlData) Init(cfg *Config) {
-	log.Logger.Debugf("opening database connection %q", cfg.Database.ConnStr)
-	db, err := sql.Open("postgres", cfg.Database.ConnStr)
-	//db, err := sql.Open("postgres", "postgresql://peverel:peverel@localhost:5433/peverel?sslmode=disable")
+func (p *PsqlData) Init(connStr string) {
+	log.Logger.Debugf("opening database connection %q", connStr)
+	db, err := sql.Open("postgres", connStr)
 	if err != nil {
 		log.Logger.Fatal(err)
 	}

@@ -18,7 +18,7 @@ func (m *MemoryData) GetGroups() map[GroupId]*Group {
 	return m.Groups
 }
 
-func (m *MemoryData) Init(_ *Config) {
+func (m *MemoryData) Init(_ string) {
 	m.Tasks = make(map[TaskId]*Task)
 	m.Groups = make(map[GroupId]*Group)
 	m.Relations = make(map[GroupId][]TaskId)

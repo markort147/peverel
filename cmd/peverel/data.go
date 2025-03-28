@@ -1,7 +1,7 @@
 package main
 
 type Data interface {
-	Init(*Config)
+	Init(string)
 	AddTask(*Task) TaskId
 	AddGroup(*Group) GroupId
 	AddRelation(GroupId, ...TaskId) error

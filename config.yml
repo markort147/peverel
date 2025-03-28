@@ -1,9 +1,0 @@
-server:
-  port: 8080
-
-log:
-  level: debug
-  output: stdout
-
-database:
-  conn_string: postgresql://peverel:peverel@db/peverel?sslmode=disable

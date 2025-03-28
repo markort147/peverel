@@ -10,8 +10,6 @@ RUN go mod download
 
 COPY ./cmd ./cmd
 
-COPY ./config.yml ./config.yml
-
 RUN CGO_ENABLED=0 GOOS=linux go build -o ./main ./cmd/peverel/
 
 EXPOSE 8080
