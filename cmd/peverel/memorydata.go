@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"github.com/markort147/gopkg/log"
 	"time"
 )
 
@@ -28,7 +27,7 @@ func (m *MemoryData) AddTask(task *Task) TaskId {
 	id := m.nextTaskId
 	m.Tasks[id] = task
 	m.nextTaskId++
-	log.Logger.Infof("add task [%d] %+v", id, task)
+	Logger.Infof("add task [%d] %+v", id, task)
 	return id
 }
 
@@ -36,12 +35,12 @@ func (m *MemoryData) AddGroup(group *Group) GroupId {
 	id := m.nextGroupId
 	m.Groups[id] = group
 	m.nextGroupId++
-	log.Logger.Infof("add group [%d] %+v", id, group)
+	Logger.Infof("add group [%d] %+v", id, group)
 	return id
 }
 
 func (m *MemoryData) AddRelation(groupId GroupId, taskIds ...TaskId) error {
-	log.Logger.Debugf("adding tasks %+v to group %d", groupId, taskIds)
+	Logger.Debugf("adding tasks %+v to group %d", groupId, taskIds)
 
 	_, gExists := m.Groups[groupId]
 
@@ -63,7 +62,7 @@ func (m *MemoryData) AddRelation(groupId GroupId, taskIds ...TaskId) error {
 		m.Relations[groupId] = append(m.Relations[groupId], taskId)
 	}
 
-	log.Logger.Debugf("updated relation: [%d] %+v", groupId, m.Relations[groupId])
+	Logger.Debugf("updated relation: [%d] %+v", groupId, m.Relations[groupId])
 
 	return nil
 }

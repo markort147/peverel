@@ -3,7 +3,6 @@ package main
 import (
 	"fmt"
 	"github.com/labstack/echo/v4"
-	"github.com/markort147/gopkg/log"
 	"net/http"
 	"strconv"
 	"time"
@@ -311,7 +310,7 @@ func renderTaskNextTime(taskId TaskId) string {
 	layout := "20060102"
 	todayStr := time.Now().Format(layout)
 	nextDayStr := nextDay.Format(layout)
-	log.Logger.Debugf("last: %v - period: %d - next day: %v - string: %s", task.LastCompleted, task.Period, nextDay, nextDayStr)
+	Logger.Debugf("last: %v - period: %d - next day: %v - string: %s", task.LastCompleted, task.Period, nextDay, nextDayStr)
 
 	if todayStr == nextDayStr {
 		return "today"
@@ -319,7 +318,7 @@ func renderTaskNextTime(taskId TaskId) string {
 	todayTime, _ := time.Parse(layout, todayStr)
 	nextDayTime, _ := time.Parse(layout, nextDayStr)
 	diff := int(nextDayTime.Sub(todayTime).Hours() / 24)
-	log.Logger.Debugf("diff: %d", diff)
+	Logger.Debugf("diff: %d", diff)
 	if diff < 0 {
 		return fmt.Sprintf("%d days ago", -diff)
 	}
@@ -332,7 +331,7 @@ func PutGroupAssignTask(c echo.Context) error {
 
 	err := data.AddRelation(GroupId(groupId), TaskId(taskId))
 	if err != nil {
-		log.Logger.Errorf("add group assign task err: %v", err)
+		Logger.Errorf("add group assign task err: %v", err)
 	}
 
 	return c.Render(http.StatusOK, "groups", data.GetGroups())
