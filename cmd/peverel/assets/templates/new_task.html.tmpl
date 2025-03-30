@@ -1,14 +1,31 @@
 {{define "new-task"}}
-<form class="flex flex-col" hx-post="/task" hx-target="#main-view" hx-swap="innerHTML">
-    <label class="font-bold mb-2" for="name">Name</label>
-    <input class="border p-2 w-full" type="text" name="name" id="name">
+<div class="hero">
+    <header class="hero-head title is-1 has-text-centered">Add a new task</header>
+    <div class="hero-body">
+        <form hx-post="/task" hx-target="#main-view" hx-swap="innerHTML">
+            <div class="field">
+                <label class="label" for="name">Name</label>
+                <div class="control">
+                    <input class="input" type="text" name="name" id="name">
+                </div>
+            </div>
 
-    <label class="font-bold mb-2"  for="description">Description</label>
-    <input class="border p-2 w-full" type="text" name="description" id="description">
+            <div class="field">
+                <label class="label" for="description">Description</label>
+                <div class="control">
+                    <input class="input" type="text" name="description" id="description">
+                </div>
+            </div>
 
-    <label class="font-bold mb-2" for="period">Period (days)</label>
-    <input class="border p-2 w-full" type="number" name="period" id="period">
+            <div class="field">
+                <label class="label" for="period">Period (days)</label>
+                <div class="control">
+                    <input class="input" type="number" name="period" id="period">
+                </div>
+            </div>
 
-    <button class="bg-blue-500 text-white p-2" type="submit">Submit</button>
-</form>
+            <button class="button is-primary" type="submit">Submit</button>
+        </form>
+    </div>
+</div>
 {{end}}

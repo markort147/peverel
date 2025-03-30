@@ -1,9 +1,16 @@
 {{define "new-group"}}
-<div>
-    <form hx-post="/group" hx-target="#main-view" hx-swap="innerHTML">
-        <label for="name">Name</label>
-        <input type="text" name="name" id="name">
-        <button type="submit">Submit</button>
-    </form>
+<div class="hero">
+    <header class="hero-head title is-1 has-text-centered">Add a new group</header>
+    <div class="hero-body">
+        <form hx-post="/group" hx-target="#main-view" hx-swap="innerHTML">
+            <div class="field">
+                <label class="label" for="name">Name</label>
+                <div class="control">
+                    <input class="input" type="text" name="name" id="name">
+                </div>
+            </div>
+            <button type="submit" class="button is-primary">Submit</button>
+        </form>
+    </div>
 </div>
 {{end}}

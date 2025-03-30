@@ -1,23 +1,47 @@
-<html lang="en-US">
+<html data-theme="light">
+
 <head>
     <title>peverel</title>
     <script src="https://unpkg.com/htmx.org/dist/htmx.min.js"></script>
-    <!--    <script src="https://unpkg.com/tailwindcss-jit-cdn"></script>-->
-        <script src="https://cdn.tailwindcss.com?plugins=forms,typography,aspect-ratio,line-clamp,container-queries"></script>
-<!--    <script src="https://cdn.tailwindcss.com"></script>-->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@1.0.2/css/bulma.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.9.0/css/all.min.css"
+          integrity="sha512-q3eWabyZPc1XTCmF+8/LuE1ozpg5xxn7iO89yfSOd5/oKvyqLngoNGsx8jq92Y8eXJ/IRxQbEC+FGSYxtk2oiw=="
+          crossorigin="anonymous" referrerpolicy="no-referrer"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 </head>
 
 <body>
 <div class="container">
-    <nav class="flex justify-items-center items-center bg-black text-white stick top-0 w-full">
-        <div class="font-bold font-mono p-2"><a class="underline decoration-2 decoration-purple-500">peverel</a></div>
-        <div class="p-2"><button hx-post="/tasks/mock" hx-target="#main-view" hx-swap="innerHTML">create mock tasks</button></div>
-        <div class="p-2"><button hx-get="/forms/new-task" hx-target="#main-view" hx-swap="innerHTML">new task</button></div>
-        <div class="p-2"><button hx-get="/forms/new-group" hx-target="#main-view" hx-swap="innerHTML">new group</button></div>
-        <div class="p-2"><button hx-get="/tasks" hx-target="#main-view" hx-swap="innerHTML">view tasks</button></div>
-        <div class="p-2"><button hx-get="/groups" hx-target="#main-view" hx-swap="innerHTML">view groups</button></div>
+    <nav class="navbar" role="navigation" aria-label="main navigation">
+        <div style="display: flex; flex-direction: row;">
+            <div class="navbar-item">
+                <button hx-post="/tasks/mock" hx-target="#main-view" hx-swap="innerHTML">
+                    <span>create mock tasks</span>
+                </button>
+            </div>
+            <div class="navbar-item">
+                <button hx-get="/forms/new-task" hx-target="#main-view" hx-swap="innerHTML">
+                    <span>new task</span>
+                </button>
+            </div>
+            <div class="navbar-item">
+                <button hx-get="/forms/new-group" hx-target="#main-view" hx-swap="innerHTML">
+                    <span>new group</span>
+                </button>
+            </div>
+            <div class="navbar-item">
+                <button hx-get="/tasks" hx-target="#main-view" hx-swap="innerHTML">
+                    <span>view tasks</span>
+                </button>
+            </div>
+            <div class="navbar-item">
+                <button hx-get="/groups" hx-target="#main-view" hx-swap="innerHTML">
+                    <span>view groups</span>
+                </button>
+            </div>
+        </div>
     </nav>
-    <div id="main-view"></div>
+    <section id="main-view" class="section"></section>
 </div>
 </body>
 </html>
