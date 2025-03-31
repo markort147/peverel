@@ -1,51 +1,54 @@
 {{ define "tasks-table" }}
 <div class="table-container">
-<table class="table is-striped is-hoverable is-fullwidth">
-    <thead>
-    <tr>
-        <th >Name</th>
-        <th >Desc</th>
-        <th >Next Time</th>
-        <th></th>
-    </tr>
-    </thead>
-    <tbody>
-    {{ range $id, $task := . }}
-    <tr>
-        <td>{{ $task.Name }}</td>
-        <td>{{ $task.Description }}</td>
-        <td id="next-time-{{ $id }}"
-            hx-get="task/{{ $id }}/next-time" hx-swap="innerHTML" hx-trigger="load"></td>
-        <td>
-            <button class="button" title="mark as completed"
-                    hx-put="task/{{ $id }}/complete" hx-target="#next-time-{{ $id }}" hx-swap="innerHTML">
+    <table class="table is-striped is-hoverable is-fullwidth">
+        <thead>
+        <tr>
+            <th>Name</th>
+            <th>Desc</th>
+            <th>Freq</th>
+            <th>Next Time</th>
+            <th></th>
+        </tr>
+        </thead>
+        <tbody>
+        {{ range $id, $task := . }}
+        <tr>
+            <td>{{ $task.Name }}</td>
+            <td>{{ $task.Description }}</td>
+            <td>Every {{ $task.Period }} days</td>
+            <td id="next-time-{{ $id }}"
+                hx-get="task/{{ $id }}/next-time" hx-swap="innerHTML" hx-trigger="load" hx-target="#next-time-{{ $id }}"></td>
+            <td>
+                <button class="button" title="mark as completed"
+                        hx-put="task/{{ $id }}/complete" hx-target="#next-time-{{ $id }}" hx-swap="innerHTML">
                 <span class="icon has-text-success">
                     <i class="fas fa-check"></i>
                 </span>
-            </button>
-            <button class="button" title="unassign from the current group"
-                    hx-put="task/{{ $id }}/unassign" hx-target="#main-view" hx-swap="innerHTML">
+                </button>
+                <button class="button" title="unassign from the current group"
+                        hx-put="task/{{ $id }}/unassign" hx-target="#main-view" hx-swap="innerHTML">
                 <span class="icon has-text-warning">
                     <i class="fas fa-object-ungroup"></i>
                 </span>
-            </button>
-            <button class="button" title="edit task"
-                    hx-get="forms/edit-task?id={{ $id }}" hx-target="#main-view" hx-swap="innerHTML">
+                </button>
+                <button class="button" title="edit task"
+                        hx-get="forms/edit-task?id={{ $id }}" hx-target="#main-view" hx-swap="innerHTML">
                 <span class="icon has-text-link">
                     <i class="fas fa-edit"></i>
                 </span>
-            </button>
-            <button class="button" title="delete task"
-                    hx-delete="task/{{ $id }}" hx-target="#main-view" hx-swap="innerHTML">
+                </button>
+                <button class="button" title="delete task"
+                        hx-delete="task/{{ $id }}" hx-target="#main-view" hx-swap="innerHTML"
+                        hx-confirm='Are you sure you want to delete "{{ $task.Name }}"?'>
                 <span class="icon has-text-danger">
                     <i class="fas fa-trash-alt"></i>
                 </span>
-            </button>
-        </td>
-    </tr>
-    {{ end }}
-    </tbody>
-</table>
+                </button>
+            </td>
+        </tr>
+        {{ end }}
+        </tbody>
+    </table>
 </div>
 {{ end }}
 

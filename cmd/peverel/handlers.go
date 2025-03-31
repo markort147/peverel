@@ -26,7 +26,7 @@ func PostTask(c echo.Context) error {
 
 	groupId, _ := strconv.Atoi(c.FormValue("group"))
 	if groupId != -1 {
-		err := data.AddRelation(GroupId(groupId), taskId)
+		err := data.SetRelation(GroupId(groupId), taskId)
 		if err != nil {
 			Logger.Errorf("Error adding group %d to task %d: %v", groupId, taskId, err)
 		}
@@ -104,7 +104,7 @@ func CreateMockTasks(c echo.Context) error {
 		Period:        7,
 		LastCompleted: now,
 	})
-	data.AddRelation(bath, toilet, bathroomFixtures, bathroomFloor)
+	data.SetRelation(bath, toilet, bathroomFixtures, bathroomFloor)
 
 	upHallway := data.AddGroup(&Group{
 		Name: "Up Hallway",
@@ -115,7 +115,7 @@ func CreateMockTasks(c echo.Context) error {
 		Period:        10,
 		LastCompleted: now,
 	})
-	data.AddRelation(upHallway, upHallwayCarpet)
+	data.SetRelation(upHallway, upHallwayCarpet)
 
 	studio := data.AddGroup(&Group{
 		Name: "Studio",
@@ -138,7 +138,7 @@ func CreateMockTasks(c echo.Context) error {
 		Period:        14,
 		LastCompleted: now,
 	})
-	data.AddRelation(studio, studioShelves, studioFloor, studioDesk)
+	data.SetRelation(studio, studioShelves, studioFloor, studioDesk)
 
 	guest := data.AddGroup(&Group{
 		Name: "Guest Room",
@@ -155,7 +155,7 @@ func CreateMockTasks(c echo.Context) error {
 		Period:        14,
 		LastCompleted: now,
 	})
-	data.AddRelation(guest, guestFloor, guestFurniture)
+	data.SetRelation(guest, guestFloor, guestFurniture)
 
 	bed := data.AddGroup(&Group{
 		Name: "Bedroom",
@@ -178,7 +178,7 @@ func CreateMockTasks(c echo.Context) error {
 		Period:        7,
 		LastCompleted: now,
 	})
-	data.AddRelation(bed, bedSheets, bedFloor, bedFurniture)
+	data.SetRelation(bed, bedSheets, bedFloor, bedFurniture)
 
 	kitchen := data.AddGroup(&Group{
 		Name: "Kitchen",
@@ -213,7 +213,7 @@ func CreateMockTasks(c echo.Context) error {
 		Period:        30,
 		LastCompleted: now,
 	})
-	data.AddRelation(kitchen, kitchenSurfaces, kitchenTidy, kitchenSink, kitchenFloor, fridge)
+	data.SetRelation(kitchen, kitchenSurfaces, kitchenTidy, kitchenSink, kitchenFloor, fridge)
 
 	living := data.AddGroup(&Group{
 		Name: "Living Room",
@@ -236,7 +236,7 @@ func CreateMockTasks(c echo.Context) error {
 		Period:        14,
 		LastCompleted: now,
 	})
-	data.AddRelation(living, livingFurnitures, livingFloor, sofa)
+	data.SetRelation(living, livingFurnitures, livingFloor, sofa)
 
 	hall := data.AddGroup(&Group{
 		Name: "Hall",
@@ -253,7 +253,7 @@ func CreateMockTasks(c echo.Context) error {
 		Period:        30,
 		LastCompleted: now,
 	})
-	data.AddRelation(hall, hallFloor, shoeRack)
+	data.SetRelation(hall, hallFloor, shoeRack)
 
 	stairs := data.AddGroup(&Group{
 		Name: "Stairs",
@@ -270,7 +270,7 @@ func CreateMockTasks(c echo.Context) error {
 		Period:        30,
 		LastCompleted: now,
 	})
-	data.AddRelation(stairs, stairsCarpet, handrail)
+	data.SetRelation(stairs, stairsCarpet, handrail)
 
 	downHallway := data.AddGroup(&Group{
 		Name: "Down Hallway",
@@ -281,7 +281,7 @@ func CreateMockTasks(c echo.Context) error {
 		Period:        7,
 		LastCompleted: now,
 	})
-	data.AddRelation(downHallway, downHallwayFloor)
+	data.SetRelation(downHallway, downHallwayFloor)
 
 	data.AddTask(&Task{
 		Name:          "Marco's bike cleaning",
@@ -341,7 +341,7 @@ func PutGroupAssignTask(c echo.Context) error {
 	groupId, _ := strconv.Atoi(c.Param("id"))
 	taskId, _ := strconv.Atoi(c.FormValue("assign-task"))
 
-	err := data.AddRelation(GroupId(groupId), TaskId(taskId))
+	err := data.SetRelation(GroupId(groupId), TaskId(taskId))
 	if err != nil {
 		Logger.Errorf("add group assign task err: %v", err)
 	}
@@ -377,14 +377,21 @@ func PutTaskUnassign(c echo.Context) error {
 }
 
 func PutTask(c echo.Context) error {
-	id, _ := strconv.Atoi(c.Param("id"))
+	taskId, _ := strconv.Atoi(c.Param("id"))
 	period, _ := strconv.Atoi(c.FormValue("period"))
-	if err := data.UpdateTask(TaskId(id), &Task{
+	if err := data.UpdateTask(TaskId(taskId), &Task{
 		Name:        c.FormValue("name"),
 		Description: c.FormValue("description"),
 		Period:      period,
 	}); err != nil {
 		return err
+	}
+	groupId, _ := strconv.Atoi(c.FormValue("group"))
+	if groupId != -1 {
+		err := data.SetRelation(GroupId(groupId), TaskId(taskId))
+		if err != nil {
+			Logger.Errorf("Error adding group %d to task %d: %v", groupId, taskId, err)
+		}
 	}
 	return GetGroups(c)
 }

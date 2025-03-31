@@ -5,7 +5,7 @@ type Data interface {
 	AddTask(*Task) TaskId
 	UpdateTask(TaskId, *Task) error
 	AddGroup(*Group) GroupId
-	AddRelation(GroupId, ...TaskId) error
+	SetRelation(GroupId, ...TaskId) error
 	CompleteTask(TaskId) error
 	GetTasksByGroup(id GroupId) map[TaskId]*Task
 	GetUnassignedTasks() map[TaskId]*Task

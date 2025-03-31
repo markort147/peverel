@@ -1,29 +1,40 @@
 {{ define "groups" }}
-<div>
+<div class="section is-flex is-flex-direction-row is-align-items-center is-justify-content-space-between is-flex-wrap-wrap">
     {{ range $id, $group := . }}
-    <div>
-        <h4 class="title">{{ $group.Name }}</h4>
-        <div>
-            <div hx-get="/tasks?group=none&layout=options" hx-trigger="load" hx-swap="beforeend"
-                 hx-target="#assign-task-to-{{ $id }}">
-                <select id="assign-task-to-{{ $id }}"
-                        name="assign-task" hx-put="/group/{{ $id }}/assign" hx-target="#main-view" hx-swap="innerHTML">
-                    <option value="" disabled selected>Assign a task...</option>
-                </select>
-                <button class="button" title="delete group"
-                        hx-delete="group/{{ $id }}" hx-target="#main-view" hx-swap="innerHTML">
-                    <span class="icon has-text-danger is-small">
-                        <i class="fas fa-trash-alt"></i>
-                    </span>
-                </button>
+    <div class="box">
+        <div class="hero">
+            <div class="hero-head">
+                <div class="is-flex is-flex-direction-row is-align-items-center is-justify-content-space-between">
+                    <h4 class="title" hx-target="#group-tasks-{{ $id }}" hx-swap="innerHTML" hx-get="/tasks?group={{ $id }}" hx-trigger="click">{{ $group.Name }}</h4>
+                    <button class="button" title="delete group"
+                            hx-delete="group/{{ $id }}" hx-target="#main-view" hx-swap="innerHTML"
+                            hx-confirm='Are you sure you want to delete "{{ $group.Name }}"?'>
+                        <span class="icon has-text-danger is-small"><i class="fas fa-trash-alt"></i></span>
+                    </button>
+                </div>
+                <div>
+                    <div hx-get="/tasks?group=none&layout=options" hx-trigger="load" hx-swap="beforeend"
+                         hx-target="#assign-task-to-{{ $id }}">
+                        <select class="select" id="assign-task-to-{{ $id }}"
+                                name="assign-task" hx-put="/group/{{ $id }}/assign" hx-target="#main-view" hx-swap="innerHTML">
+                            <option value="" disabled selected>Assign a task...</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="hero-body" id="group-tasks-{{ $id }}"></div>
             </div>
         </div>
-        <div hx-get="/tasks?group={{ $id }}" hx-trigger="load" hx-swap="innerHTML"></div>
     </div>
     {{ end }}
-    <div>
-        <h4 class="title">No Group</h4>
-        <div hx-get="/tasks?group=none" hx-trigger="load" hx-swap="innerHTML"></div>
+    <div class="box">
+        <div class="hero">
+            <div class="hero-head">
+                <div>
+                    <h4 class="title" hx-target="#no-group-tasks" hx-swap="innerHTML" hx-get="/tasks?group=none" hx-trigger="click">No Group</h4>
+                </div>
+                <div class="hero-body" id="no-group-tasks"></div>
+            </div>
+        </div>
     </div>
 </div>
 {{ end }}

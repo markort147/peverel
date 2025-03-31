@@ -60,7 +60,7 @@ func (pd *PsqlData) CompleteTask(id TaskId) error {
 	return err
 }
 
-func (pd *PsqlData) AddRelation(groupId GroupId, taskIds ...TaskId) error {
+func (pd *PsqlData) SetRelation(groupId GroupId, taskIds ...TaskId) error {
 	for _, taskId := range taskIds {
 		Logger.Debugf("adding task %d to group %d", taskId, groupId)
 		_, err := pd.DB.Exec("UPDATE tasks SET group_id=$1 WHERE id=$2", groupId, taskId)
