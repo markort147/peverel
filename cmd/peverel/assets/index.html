@@ -14,34 +14,34 @@
 <div class="container">
     <nav class="navbar" role="navigation" aria-label="main navigation">
         <div style="display: flex; flex-direction: row;">
+            <!--            <div class="navbar-item">-->
+            <!--                <button hx-post="/tasks/mock" hx-target="#main-view" hx-swap="innerHTML">-->
+            <!--                    <span>create mock tasks</span>-->
+            <!--                </button>-->
+            <!--            </div>-->
             <div class="navbar-item">
-                <button hx-post="/tasks/mock" hx-target="#main-view" hx-swap="innerHTML">
-                    <span>create mock tasks</span>
-                </button>
-            </div>
-            <div class="navbar-item">
-                <button hx-get="/forms/new-task" hx-target="#main-view" hx-swap="innerHTML">
-                    <span>new task</span>
-                </button>
-            </div>
-            <div class="navbar-item">
-                <button hx-get="/forms/new-group" hx-target="#main-view" hx-swap="innerHTML">
-                    <span>new group</span>
-                </button>
-            </div>
-            <div class="navbar-item">
-                <button hx-get="/tasks" hx-target="#main-view" hx-swap="innerHTML">
+                <button class="button is-link" hx-get="/tasks" hx-target="#main-view" hx-swap="innerHTML">
                     <span>view tasks</span>
                 </button>
             </div>
             <div class="navbar-item">
-                <button hx-get="/groups" hx-target="#main-view" hx-swap="innerHTML">
+                <button class="button is-link" hx-get="/groups" hx-target="#main-view" hx-swap="innerHTML">
                     <span>view groups</span>
+                </button>
+            </div>
+            <div class="navbar-item">
+                <button class="button is-success" hx-get="/forms/new-task" hx-target="#main-view" hx-swap="innerHTML">
+                    <span>new task</span>
+                </button>
+            </div>
+            <div class="navbar-item">
+                <button class="button is-success" hx-get="/forms/new-group" hx-target="#main-view" hx-swap="innerHTML">
+                    <span>new group</span>
                 </button>
             </div>
         </div>
     </nav>
-    <section id="main-view" class="section"></section>
+    <section id="main-view" class="section" hx-get="/groups" hx-trigger="load" hx-swap="innerHTML"></section>
 </div>
 </body>
 </html>

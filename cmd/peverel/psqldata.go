@@ -187,7 +187,6 @@ func (pd *PsqlData) GetTask(id TaskId) *Task {
 
 	//rows.Scan(&name, &description, &period, &lastCompleted)
 	lastCompletedDate, _ := time.Parse("2006-01-02T15:04:05Z", lastCompleted)
-	Logger.Debugf("LastCompleted: %s - LastCompletedDate: %v", lastCompleted, lastCompletedDate)
 	return &Task{
 		Name:          name,
 		Description:   description,
@@ -214,6 +213,19 @@ func (pd *PsqlData) DeleteTask(id TaskId) error {
 
 func (pd *PsqlData) DeleteGroup(id GroupId) error {
 	_, err := pd.DB.Exec("DELETE FROM groups WHERE id=$1", id)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func (pd *PsqlData) UpdateTask(id TaskId, task *Task) error {
+	_, err := pd.DB.Exec("UPDATE tasks SET name=$1, description=$2, period=$3 WHERE id=$4",
+		task.Name,
+		task.Description,
+		task.Period,
+		id,
+	)
 	if err != nil {
 		return err
 	}

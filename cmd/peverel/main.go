@@ -3,8 +3,6 @@ package main
 import (
 	"embed"
 	"fmt"
-	"github.com/labstack/echo/v4"
-	"net/http"
 	"os"
 	"strconv"
 )
@@ -51,11 +49,13 @@ func main() {
 			FileSystem: assetsFS,
 			RoutesRegister: func(e *Echo) {
 				e.GET("/forms/new-task", GetNewTaskForm)
+				e.GET("/forms/edit-task", GetEditTaskForm)
 				e.GET("/forms/new-group", GetNewGroupForm)
 				e.GET("/groups", GetGroups)
 				e.GET("/tasks", GetTasks)
 				e.GET("/task/:id/next-time", GetTaskNextTime)
 				e.POST("/task", PostTask)
+				e.PUT("/task/:id", PutTask)
 				e.POST("/group", PostGroup)
 				e.PUT("/task/:id/complete", PutTaskComplete)
 				e.PUT("/task/:id/unassign", PutTaskUnassign)
@@ -72,31 +72,4 @@ func main() {
 	defer Logger.Info("Server exited")
 
 	wgServer.Wait()
-}
-
-func DeleteTask(c echo.Context) error {
-	taskId, _ := strconv.Atoi(c.Param("id"))
-	if err := data.DeleteTask(TaskId(taskId)); err != nil {
-		Logger.Errorf("Error deleting task: %v", err)
-		return err
-	}
-	return c.Render(http.StatusOK, "groups", data.GetGroups())
-}
-
-func DeleteGroup(c echo.Context) error {
-	groupId, _ := strconv.Atoi(c.Param("id"))
-	if err := data.DeleteGroup(GroupId(groupId)); err != nil {
-		Logger.Errorf("Error deleting group: %v", err)
-		return err
-	}
-	return c.Render(http.StatusOK, "groups", data.GetGroups())
-}
-
-func PutTaskUnassign(c echo.Context) error {
-	taskId, _ := strconv.Atoi(c.Param("id"))
-	if err := data.UnassignTask(TaskId(taskId)); err != nil {
-		Logger.Errorf("Error unassigning task: %v", err)
-		return err
-	}
-	return c.Render(http.StatusOK, "groups", data.GetGroups())
 }

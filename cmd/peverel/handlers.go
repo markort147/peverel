@@ -9,7 +9,7 @@ import (
 )
 
 func GetNewTaskForm(c echo.Context) error {
-	return c.Render(http.StatusOK, "new-task", nil)
+	return c.Render(http.StatusOK, "task-form", nil)
 }
 
 func GetNewGroupForm(c echo.Context) error {
@@ -18,11 +18,20 @@ func GetNewGroupForm(c echo.Context) error {
 
 func PostTask(c echo.Context) error {
 	period, _ := strconv.Atoi(c.FormValue("period"))
-	data.AddTask(&Task{
+	taskId := data.AddTask(&Task{
 		Name:        c.FormValue("name"),
 		Description: c.FormValue("description"),
 		Period:      period,
 	})
+
+	groupId, _ := strconv.Atoi(c.FormValue("group"))
+	if groupId != -1 {
+		err := data.AddRelation(GroupId(groupId), taskId)
+		if err != nil {
+			Logger.Errorf("Error adding group %d to task %d: %v", groupId, taskId, err)
+		}
+	}
+
 	return GetGroups(c)
 }
 
@@ -56,7 +65,12 @@ func GetTasks(c echo.Context) error {
 }
 
 func GetGroups(c echo.Context) error {
-	return c.Render(http.StatusOK, "groups", data.GetGroups())
+	template := "groups"
+	layout := c.QueryParam("layout")
+	if layout == "options" {
+		template = "groups-options"
+	}
+	return c.Render(http.StatusOK, template, data.GetGroups())
 }
 
 func PutTaskComplete(c echo.Context) error {
@@ -310,7 +324,6 @@ func renderTaskNextTime(taskId TaskId) string {
 	layout := "20060102"
 	todayStr := time.Now().Format(layout)
 	nextDayStr := nextDay.Format(layout)
-	Logger.Debugf("last: %v - period: %d - next day: %v - string: %s", task.LastCompleted, task.Period, nextDay, nextDayStr)
 
 	if todayStr == nextDayStr {
 		return "today"
@@ -318,7 +331,6 @@ func renderTaskNextTime(taskId TaskId) string {
 	todayTime, _ := time.Parse(layout, todayStr)
 	nextDayTime, _ := time.Parse(layout, nextDayStr)
 	diff := int(nextDayTime.Sub(todayTime).Hours() / 24)
-	Logger.Debugf("diff: %d", diff)
 	if diff < 0 {
 		return fmt.Sprintf("%d days ago", -diff)
 	}
@@ -335,4 +347,55 @@ func PutGroupAssignTask(c echo.Context) error {
 	}
 
 	return c.Render(http.StatusOK, "groups", data.GetGroups())
+}
+
+func DeleteTask(c echo.Context) error {
+	taskId, _ := strconv.Atoi(c.Param("id"))
+	if err := data.DeleteTask(TaskId(taskId)); err != nil {
+		Logger.Errorf("Error deleting task: %v", err)
+		return err
+	}
+	return c.Render(http.StatusOK, "groups", data.GetGroups())
+}
+
+func DeleteGroup(c echo.Context) error {
+	groupId, _ := strconv.Atoi(c.Param("id"))
+	if err := data.DeleteGroup(GroupId(groupId)); err != nil {
+		Logger.Errorf("Error deleting group: %v", err)
+		return err
+	}
+	return c.Render(http.StatusOK, "groups", data.GetGroups())
+}
+
+func PutTaskUnassign(c echo.Context) error {
+	taskId, _ := strconv.Atoi(c.Param("id"))
+	if err := data.UnassignTask(TaskId(taskId)); err != nil {
+		Logger.Errorf("Error unassigning task: %v", err)
+		return err
+	}
+	return c.Render(http.StatusOK, "groups", data.GetGroups())
+}
+
+func PutTask(c echo.Context) error {
+	id, _ := strconv.Atoi(c.Param("id"))
+	period, _ := strconv.Atoi(c.FormValue("period"))
+	if err := data.UpdateTask(TaskId(id), &Task{
+		Name:        c.FormValue("name"),
+		Description: c.FormValue("description"),
+		Period:      period,
+	}); err != nil {
+		return err
+	}
+	return GetGroups(c)
+}
+
+func GetEditTaskForm(c echo.Context) error {
+	id, _ := strconv.Atoi(c.QueryParam("id"))
+	task := data.GetTask(TaskId(id))
+	return c.Render(http.StatusOK, "task-form", map[string]any{
+		"Id":          id,
+		"Name":        task.Name,
+		"Description": task.Description,
+		"Period":      task.Period,
+	})
 }

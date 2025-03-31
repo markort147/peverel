@@ -29,6 +29,12 @@
                     <i class="fas fa-object-ungroup"></i>
                 </span>
             </button>
+            <button class="button" title="edit task"
+                    hx-get="forms/edit-task?id={{ $id }}" hx-target="#main-view" hx-swap="innerHTML">
+                <span class="icon has-text-link">
+                    <i class="fas fa-edit"></i>
+                </span>
+            </button>
             <button class="button" title="delete task"
                     hx-delete="task/{{ $id }}" hx-target="#main-view" hx-swap="innerHTML">
                 <span class="icon has-text-danger">

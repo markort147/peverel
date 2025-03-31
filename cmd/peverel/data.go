@@ -3,6 +3,7 @@ package main
 type Data interface {
 	Init(string)
 	AddTask(*Task) TaskId
+	UpdateTask(TaskId, *Task) error
 	AddGroup(*Group) GroupId
 	AddRelation(GroupId, ...TaskId) error
 	CompleteTask(TaskId) error
