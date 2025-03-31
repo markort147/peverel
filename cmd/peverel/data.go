@@ -11,6 +11,9 @@ type Data interface {
 	GetGroups() map[GroupId]*Group
 	GetTask(id TaskId) *Task
 	GetTasks() map[TaskId]*Task
+	UnassignTask(TaskId) error
+	DeleteTask(id TaskId) error
+	DeleteGroup(id GroupId) error
 }
 
 type TaskId int

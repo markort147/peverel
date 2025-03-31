@@ -17,10 +17,22 @@
         <td id="next-time-{{ $id }}"
             hx-get="task/{{ $id }}/next-time" hx-swap="innerHTML" hx-trigger="load"></td>
         <td>
-            <button class="button"
+            <button class="button" title="mark as completed"
                     hx-put="task/{{ $id }}/complete" hx-target="#next-time-{{ $id }}" hx-swap="innerHTML">
                 <span class="icon has-text-success">
                     <i class="fas fa-check"></i>
+                </span>
+            </button>
+            <button class="button" title="unassign from the current group"
+                    hx-put="task/{{ $id }}/unassign" hx-target="#main-view" hx-swap="innerHTML">
+                <span class="icon has-text-warning">
+                    <i class="fas fa-object-ungroup"></i>
+                </span>
+            </button>
+            <button class="button" title="delete task"
+                    hx-delete="task/{{ $id }}" hx-target="#main-view" hx-swap="innerHTML">
+                <span class="icon has-text-danger">
+                    <i class="fas fa-trash-alt"></i>
                 </span>
             </button>
         </td>
