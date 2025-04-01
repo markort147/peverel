@@ -23,19 +23,25 @@
         <!--                    <span>create mock tasks</span>-->
         <!--                </button>-->
         <!--            </div>-->
+        <div class="navbar-item">
+            <button class="button is-danger is-light" hx-get="/dashboard" hx-target="#main-view" hx-swap="innerHTML">
+                <span class="icon"><i class="fas fa-chart-line"></i></span>
+                <span>HOME</span>
+            </button>
+        </div>
         <div class="navbar-start is-flex is-flex-direction-row is-justify-content-center">
             <div class="navbar-item">
-                <button class="button is-info is-light" hx-get="/tasks" hx-target="#main-view" hx-swap="innerHTML">
+                <button class="button is-info is-light" hx-get="/groups" hx-target="#main-view" hx-swap="innerHTML">
                     <span class="icon"><i class="fas fa-list-ul"></i></span>
                     <span>TASKS</span>
                 </button>
             </div>
-            <div class="navbar-item">
-                <button class="button is-info is-light" hx-get="/groups" hx-target="#main-view" hx-swap="innerHTML">
-                    <span class="icon"><i class="fas fa-layer-group"></i></span>
-                    <span>GROUPS</span>
-                </button>
-            </div>
+            <!--            <div class="navbar-item">-->
+            <!--                <button class="button is-info is-light" hx-get="/groups" hx-target="#main-view" hx-swap="innerHTML">-->
+            <!--                    <span class="icon"><i class="fas fa-layer-group"></i></span>-->
+            <!--                    <span>GROUPS</span>-->
+            <!--                </button>-->
+            <!--            </div>-->
             <div class="navbar-item">
                 <button class="button is-success is-light" hx-get="/forms/new-task" hx-target="#main-view" hx-swap="innerHTML">
                     <span class="icon"><i class="fas fa-plus"></i></span>
@@ -50,7 +56,7 @@
             </div>
         </div>
     </nav>
-    <div id="main-view" class="section" hx-get="/groups" hx-trigger="load" hx-swap="innerHTML"></div>
+    <div id="main-view" class="section" hx-get="/dashboard" hx-trigger="load" hx-swap="innerHTML"></div>
 </div>
 </body>
 </html>

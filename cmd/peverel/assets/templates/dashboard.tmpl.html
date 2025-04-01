@@ -1,0 +1,32 @@
+{{ define "dashboard" }}
+<div class="section">
+    <div class="level">
+        <div class="level-item has-text-centered">
+            <div>
+                <p class="heading">Expired tasks</p>
+                <p class="title" hx-get="/tasks/count?days=0" hx-trigger="load"></p>
+            </div>
+        </div>
+        <div class="level-item has-text-centered">
+            <div>
+                <p class="heading">Next 7 days</p>
+                <p class="title" hx-get="/tasks/count?days=7" hx-trigger="load"></p>
+            </div>
+        </div>
+        <div class="level-item has-text-centered">
+            <div>
+                <p class="heading">Next 14 days</p>
+                <p class="title" hx-get="/tasks/count?days=14" hx-trigger="load"></p>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="section">
+    <p class="title">Expired Tasks</p>
+    <div hx-get="/tasks?days=0" hx-trigger="load" hx-swap="innerHTML"></div>
+</div>
+<div class="section">
+    <p class="title">Expiring Tasks</p>
+    <div hx-get="/tasks?days=7" hx-trigger="load" hx-swap="innerHTML"></div>
+</div>
+{{ end }}

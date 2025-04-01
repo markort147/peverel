@@ -10,6 +10,7 @@ type Data interface {
 	GetTasksByGroup(id GroupId) map[TaskId]*Task
 	GetUnassignedTasks() map[TaskId]*Task
 	GetGroups() map[GroupId]*Group
+	GetGroup(id GroupId) *Group
 	GetTask(id TaskId) *Task
 	GetTasks() map[TaskId]*Task
 	UnassignTask(TaskId) error

@@ -21,7 +21,7 @@
                     </button>
                 </div>
                 <div>
-                    <div hx-get="/tasks?group=none&layout=options" hx-trigger="load" hx-swap="beforeend"
+                    <div hx-get="/tasks?group=-1&layout=options" hx-trigger="load" hx-swap="beforeend"
                          hx-target="#assign-task-to-{{ $id }}">
                         <select class="select" id="assign-task-to-{{ $id }}"
                                 name="assign-task" hx-put="/group/{{ $id }}/assign" hx-target="#main-view" hx-swap="innerHTML">
@@ -40,7 +40,7 @@
                 <div class="is-flex is-flex-direction-row">
                     <h4 class="title">No Group</h4>
                     <button class="button" title="expand group"
-                            hx-get="/tasks?group=none" hx-target="#no-group-tasks" hx-swap="innerHTML">
+                            hx-get="/tasks?group=-1" hx-target="#no-group-tasks" hx-swap="innerHTML">
                         <span class="icon has-text-info is-small"><i class="fas fa-expand-arrows-alt"></i></span>
                     </button>
                     <button class="button" title="close group"

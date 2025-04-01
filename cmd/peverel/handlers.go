@@ -32,7 +32,7 @@ func PostTask(c echo.Context) error {
 		}
 	}
 
-	return GetGroups(c)
+	return GetDashboard(c)
 }
 
 func PostGroup(c echo.Context) error {
@@ -45,14 +45,37 @@ func PostGroup(c echo.Context) error {
 func GetTasks(c echo.Context) error {
 	tasks := make(map[TaskId]*Task)
 	groupId := c.QueryParam("group")
-	switch groupId {
-	case "":
+	days := c.QueryParam("days")
+
+	if groupId == "" {
 		tasks = data.GetTasks()
-	case "none":
-		tasks = data.GetUnassignedTasks()
-	default:
+	} else {
 		intGroupId, _ := strconv.Atoi(groupId)
-		tasks = data.GetTasksByGroup(GroupId(intGroupId))
+		if intGroupId > -1 {
+			tasks = data.GetTasksByGroup(GroupId(intGroupId))
+		} else {
+			tasks = data.GetUnassignedTasks()
+		}
+	}
+
+	filteredTasks := make(map[TaskId]*Task)
+	if days == "" {
+		filteredTasks = tasks
+	} else {
+		daysInt, _ := strconv.Atoi(days)
+		layout := "20060102"
+		iterations := 0
+		for id, task := range tasks {
+			iterations++
+			nextDayStr := task.LastCompleted.AddDate(0, 0, task.Period).Format(layout)
+			nextDayTime, _ := time.Parse(layout, nextDayStr)
+			if nextDayTime.Before(time.Now().AddDate(0, 0, daysInt)) {
+				filteredTasks[id] = task
+			}
+			if iterations > 1000 {
+				Logger.Warnf("detected long loop, breaking GetTasksCount")
+			}
+		}
 	}
 
 	template := "tasks-table"
@@ -61,7 +84,7 @@ func GetTasks(c echo.Context) error {
 		template = "tasks-options"
 	}
 
-	return c.Render(http.StatusOK, template, tasks)
+	return c.Render(http.StatusOK, template, filteredTasks)
 }
 
 func GetGroups(c echo.Context) error {
@@ -308,7 +331,7 @@ func CreateMockTasks(c echo.Context) error {
 		LastCompleted: now,
 	})
 
-	return GetGroups(c)
+	return GetDashboard(c)
 }
 
 func GetTaskNextTime(c echo.Context) error {
@@ -319,17 +342,16 @@ func GetTaskNextTime(c echo.Context) error {
 func renderTaskNextTime(taskId TaskId) string {
 	task := data.GetTask(taskId)
 
+	layout := "20060102"
 	nextDay := task.LastCompleted.AddDate(0, 0, task.Period)
 
-	layout := "20060102"
-	todayStr := time.Now().Format(layout)
 	nextDayStr := nextDay.Format(layout)
-
+	nextDayTime, _ := time.Parse(layout, nextDayStr)
+	todayStr := time.Now().Format(layout)
+	todayTime, _ := time.Parse(layout, todayStr)
 	if todayStr == nextDayStr {
 		return "today"
 	}
-	todayTime, _ := time.Parse(layout, todayStr)
-	nextDayTime, _ := time.Parse(layout, nextDayStr)
 	diff := int(nextDayTime.Sub(todayTime).Hours() / 24)
 	if diff < 0 {
 		return fmt.Sprintf("%d days ago", -diff)
@@ -355,7 +377,7 @@ func DeleteTask(c echo.Context) error {
 		Logger.Errorf("Error deleting task: %v", err)
 		return err
 	}
-	return c.Render(http.StatusOK, "groups", data.GetGroups())
+	return GetDashboard(c)
 }
 
 func DeleteGroup(c echo.Context) error {
@@ -393,7 +415,7 @@ func PutTask(c echo.Context) error {
 			Logger.Errorf("Error adding group %d to task %d: %v", groupId, taskId, err)
 		}
 	}
-	return GetGroups(c)
+	return GetDashboard(c)
 }
 
 func GetEditTaskForm(c echo.Context) error {
@@ -405,4 +427,31 @@ func GetEditTaskForm(c echo.Context) error {
 		"Description": task.Description,
 		"Period":      task.Period,
 	})
+}
+
+func GetTasksCount(c echo.Context) error {
+	days, _ := strconv.Atoi(c.QueryParam("days"))
+	dateBefore := time.Now().AddDate(0, 0, days)
+	layout := "20060102"
+
+	tasks := data.GetTasks()
+	total := len(tasks)
+	res := 0
+	iterations := 0
+	for _, task := range tasks {
+		iterations++
+		nextDayStr := task.LastCompleted.AddDate(0, 0, task.Period).Format(layout)
+		nextDayTime, _ := time.Parse(layout, nextDayStr)
+		if nextDayTime.Before(dateBefore) {
+			res++
+		}
+		if iterations > 1000 {
+			Logger.Warnf("detected long loop, breaking GetTasksCount")
+		}
+	}
+	return c.String(http.StatusOK, fmt.Sprintf("%d (%.f%%)", res, 100*float64(res)/float64(total)))
+}
+
+func GetDashboard(c echo.Context) error {
+	return c.Render(http.StatusOK, "dashboard", nil)
 }

@@ -56,11 +56,13 @@ func main() {
 				e.GET("/forms/new-task", GetNewTaskForm)
 				e.GET("/forms/edit-task", GetEditTaskForm)
 				e.GET("/forms/new-group", GetNewGroupForm)
+				e.GET("/dashboard", GetDashboard)
 				e.GET("/groups", GetGroups)
 				e.GET("/tasks", GetTasks)
 				e.GET("/task/:id/next-time", GetTaskNextTime)
 				e.POST("/task", PostTask)
 				e.PUT("/task/:id", PutTask)
+				//e.GET("/task/:id/group", GetTaskGroup)
 				e.POST("/group", PostGroup)
 				e.PUT("/task/:id/complete", PutTaskComplete)
 				e.PUT("/task/:id/unassign", PutTaskUnassign)
@@ -68,6 +70,7 @@ func main() {
 				e.DELETE("/group/:id", DeleteGroup)
 				e.POST("/tasks/mock", CreateMockTasks)
 				e.PUT("/group/:id/assign", PutGroupAssignTask)
+				e.GET("/tasks/count", GetTasksCount)
 			},
 		},
 	)
@@ -78,3 +81,9 @@ func main() {
 
 	wgServer.Wait()
 }
+
+//func GetTaskGroup(c echo.Context) error {
+//	taskId, _ := strconv.Atoi(c.Param("id"))
+//	task := data.GetTask(TaskId(taskId))
+//	group := data.GetGroup(task.GroupId)
+//}

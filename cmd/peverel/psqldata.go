@@ -231,3 +231,14 @@ func (pd *PsqlData) UpdateTask(id TaskId, task *Task) error {
 	}
 	return nil
 }
+
+func (pd *PsqlData) GetGroup(id GroupId) *Group {
+	var name string
+	err := pd.DB.QueryRow("SELECT name FROM groups WHERE id=$1", id).Scan(&name)
+	if err != nil {
+		Logger.Fatal(err)
+	}
+	return &Group{
+		Name: name,
+	}
+}
