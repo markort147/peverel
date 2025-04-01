@@ -4,8 +4,16 @@
     <div class="box">
         <div class="hero">
             <div class="hero-head">
-                <div class="is-flex is-flex-direction-row is-align-items-center is-justify-content-space-between">
-                    <h4 class="title" hx-target="#group-tasks-{{ $id }}" hx-swap="innerHTML" hx-get="/tasks?group={{ $id }}" hx-trigger="click">{{ $group.Name }}</h4>
+                <div class="is-flex is-flex-direction-row">
+                    <h4 class="title">{{ $group.Name }}</h4>
+                    <button class="button" title="expand group"
+                            hx-get="/tasks?group={{ $id }}" hx-target="#group-tasks-{{ $id }}" hx-swap="innerHTML">
+                        <span class="icon has-text-info is-small"><i class="fas fa-expand-arrows-alt"></i></span>
+                    </button>
+                    <button class="button" title="close group"
+                            hx-get="empty-string" hx-target="#group-tasks-{{ $id }}" hx-swap="innerHTML">
+                        <span class="icon has-text-warning is-small"><i class="fas fa-compress-arrows-alt"></i></span>
+                    </button>
                     <button class="button" title="delete group"
                             hx-delete="group/{{ $id }}" hx-target="#main-view" hx-swap="innerHTML"
                             hx-confirm='Are you sure you want to delete "{{ $group.Name }}"?'>
@@ -29,8 +37,16 @@
     <div class="box">
         <div class="hero">
             <div class="hero-head">
-                <div>
-                    <h4 class="title" hx-target="#no-group-tasks" hx-swap="innerHTML" hx-get="/tasks?group=none" hx-trigger="click">No Group</h4>
+                <div class="is-flex is-flex-direction-row">
+                    <h4 class="title">No Group</h4>
+                    <button class="button" title="expand group"
+                            hx-get="/tasks?group=none" hx-target="#no-group-tasks" hx-swap="innerHTML">
+                        <span class="icon has-text-info is-small"><i class="fas fa-expand-arrows-alt"></i></span>
+                    </button>
+                    <button class="button" title="close group"
+                            hx-get="empty-string" hx-target="#no-group-tasks" hx-swap="innerHTML">
+                        <span class="icon has-text-warning is-small"><i class="fas fa-compress-arrows-alt"></i></span>
+                    </button>
                 </div>
                 <div class="hero-body" id="no-group-tasks"></div>
             </div>

@@ -73,6 +73,7 @@ func StartServer(cfg *Config) (*sync.WaitGroup, error) {
 
 	// start the server
 	go func() {
+		// http
 		if err := e.Start(fmt.Sprintf(":%d", cfg.Port)); err != nil && !errors.Is(err, http.ErrServerClosed) {
 			e.Logger.Fatal("Error starting the server: ", err)
 		}

@@ -3,6 +3,8 @@ package main
 import (
 	"embed"
 	"fmt"
+	"github.com/labstack/echo/v4"
+	"net/http"
 	"os"
 	"strconv"
 )
@@ -48,6 +50,9 @@ func main() {
 			Logger:     Logger,
 			FileSystem: assetsFS,
 			RoutesRegister: func(e *Echo) {
+				e.GET("empty-string", func(c echo.Context) error {
+					return c.String(http.StatusOK, "")
+				})
 				e.GET("/forms/new-task", GetNewTaskForm)
 				e.GET("/forms/edit-task", GetEditTaskForm)
 				e.GET("/forms/new-group", GetNewGroupForm)
