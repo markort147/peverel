@@ -13,20 +13,14 @@
                 <p class="title" hx-get="/tasks/count?days=7" hx-trigger="load"></p>
             </div>
         </div>
-        <div class="level-item has-text-centered">
-            <div>
-                <p class="heading">Next 14 days</p>
-                <p class="title" hx-get="/tasks/count?days=14" hx-trigger="load"></p>
-            </div>
-        </div>
     </div>
 </div>
 <div class="section">
-    <p class="title">Expired Tasks</p>
+    <p class="title">Expired</p>
     <div hx-get="/tasks?days=0" hx-trigger="load" hx-swap="innerHTML"></div>
 </div>
 <div class="section">
-    <p class="title">Expiring Tasks</p>
-    <div hx-get="/tasks?days=7" hx-trigger="load" hx-swap="innerHTML"></div>
+    <p class="title">Incoming</p>
+    <div hx-get="/tasks?days=7&expired=false" hx-trigger="load" hx-swap="innerHTML"></div>
 </div>
 {{ end }}

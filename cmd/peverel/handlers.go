@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/labstack/echo/v4"
 	"net/http"
+	"sort"
 	"strconv"
 	"time"
 )
@@ -43,9 +44,10 @@ func PostGroup(c echo.Context) error {
 }
 
 func GetTasks(c echo.Context) error {
-	tasks := make(map[TaskId]*Task)
+	var tasks []*Task
 	groupId := c.QueryParam("group")
 	days := c.QueryParam("days")
+	expired := c.QueryParam("expired") != "false"
 
 	if groupId == "" {
 		tasks = data.GetTasks()
@@ -58,25 +60,34 @@ func GetTasks(c echo.Context) error {
 		}
 	}
 
-	filteredTasks := make(map[TaskId]*Task)
+	filteredTasks := make([]*Task, 0)
 	if days == "" {
 		filteredTasks = tasks
 	} else {
 		daysInt, _ := strconv.Atoi(days)
 		layout := "20060102"
 		iterations := 0
-		for id, task := range tasks {
+		for _, task := range tasks {
 			iterations++
 			nextDayStr := task.LastCompleted.AddDate(0, 0, task.Period).Format(layout)
 			nextDayTime, _ := time.Parse(layout, nextDayStr)
+			if !expired && nextDayTime.Before(time.Now()) {
+				continue
+			}
 			if nextDayTime.Before(time.Now().AddDate(0, 0, daysInt)) {
-				filteredTasks[id] = task
+				filteredTasks = append(filteredTasks, task)
 			}
 			if iterations > 1000 {
 				Logger.Warnf("detected long loop, breaking GetTasksCount")
 			}
 		}
 	}
+
+	sort.Slice(filteredTasks, func(i, j int) bool {
+		t1 := filteredTasks[i]
+		t2 := filteredTasks[j]
+		return t1.LastCompleted.AddDate(0, 0, t1.Period).Before(t2.LastCompleted.AddDate(0, 0, t2.Period))
+	})
 
 	template := "tasks-table"
 	layout := c.QueryParam("layout")

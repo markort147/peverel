@@ -59,14 +59,14 @@ func (pd *PsqlData) SetRelation(groupId GroupId, taskIds ...TaskId) error {
 	return nil
 }
 
-func (pd *PsqlData) GetTasksByGroup(groupId GroupId) map[TaskId]*Task {
+func (pd *PsqlData) GetTasksByGroup(groupId GroupId) []*Task {
 	rows, err := pd.DB.Query("SELECT id, name, description, period, last_completed FROM tasks where group_id=$1", groupId)
 	defer rows.Close()
 	if err != nil {
 		Logger.Fatal(err)
 	}
 
-	res := make(map[TaskId]*Task)
+	res := make([]*Task, 0)
 	for rows.Next() {
 		var id TaskId
 		var name string
@@ -75,25 +75,26 @@ func (pd *PsqlData) GetTasksByGroup(groupId GroupId) map[TaskId]*Task {
 		var lastCompleted string
 		rows.Scan(&id, &name, &description, &period, &lastCompleted)
 		lastCompletedDate, _ := time.Parse("2006-01-02T15:04:05Z", lastCompleted)
-		res[id] = &Task{
+		res = append(res, &Task{
+			Id:            id,
 			Name:          name,
 			Description:   description,
 			Period:        period,
 			LastCompleted: lastCompletedDate,
-		}
+		})
 	}
 
 	return res
 }
 
-func (pd *PsqlData) GetUnassignedTasks() map[TaskId]*Task {
+func (pd *PsqlData) GetUnassignedTasks() []*Task {
 	rows, err := pd.DB.Query("SELECT id, name, description, period, last_completed FROM tasks where group_id is NULL")
 	defer rows.Close()
 	if err != nil {
 		Logger.Fatal(err)
 	}
 
-	unassignedTasks := make(map[TaskId]*Task)
+	unassignedTasks := make([]*Task, 0)
 	for rows.Next() {
 		var id TaskId
 		var name string
@@ -102,25 +103,26 @@ func (pd *PsqlData) GetUnassignedTasks() map[TaskId]*Task {
 		var lastCompleted string
 		rows.Scan(&id, &name, &description, &period, &lastCompleted)
 		lastCompletedDate, _ := time.Parse("2006-01-02T15:04:05Z", lastCompleted)
-		unassignedTasks[id] = &Task{
+		unassignedTasks = append(unassignedTasks, &Task{
+			Id:            id,
 			Name:          name,
 			Description:   description,
 			Period:        period,
 			LastCompleted: lastCompletedDate,
-		}
+		})
 	}
 
 	return unassignedTasks
 }
 
-func (pd *PsqlData) GetTasks() map[TaskId]*Task {
+func (pd *PsqlData) GetTasks() []*Task {
 	rows, err := pd.DB.Query("SELECT id, name, description, period, last_completed FROM tasks")
 	defer rows.Close()
 	if err != nil {
 		Logger.Fatal(err)
 	}
 
-	tasks := make(map[TaskId]*Task)
+	tasks := make([]*Task, 0)
 	for rows.Next() {
 		var id TaskId
 		var name string
@@ -130,33 +132,34 @@ func (pd *PsqlData) GetTasks() map[TaskId]*Task {
 		rows.Scan(&id, &name, &description, &period, &lastCompleted)
 		lastCompletedDate, _ := time.Parse("2006-01-02T15:04:05Z", lastCompleted)
 		Logger.Debugf("LastCompleted: %s - LastCompletedDate: %v", lastCompleted, lastCompletedDate)
-		tasks[id] = &Task{
+		tasks = append(tasks, &Task{
+			Id:            id,
 			Name:          name,
 			Description:   description,
 			Period:        period,
 			LastCompleted: lastCompletedDate,
-		}
-		Logger.Debugf("Found task %+v", tasks[id])
+		})
 	}
 
 	return tasks
 }
 
-func (pd *PsqlData) GetGroups() map[GroupId]*Group {
+func (pd *PsqlData) GetGroups() []*Group {
 	rows, err := pd.DB.Query("SELECT id, name from groups")
 	defer rows.Close()
 	if err != nil {
 		Logger.Fatal(err)
 	}
 
-	groups := make(map[GroupId]*Group)
+	groups := make([]*Group, 0)
 	for rows.Next() {
 		var id GroupId
 		var name string
 		rows.Scan(&id, &name)
-		groups[id] = &Group{
+		groups = append(groups, &Group{
+			Id:   id,
 			Name: name,
-		}
+		})
 	}
 
 	return groups
@@ -176,6 +179,7 @@ func (pd *PsqlData) GetTask(id TaskId) *Task {
 	//rows.Scan(&name, &description, &period, &lastCompleted)
 	lastCompletedDate, _ := time.Parse("2006-01-02T15:04:05Z", lastCompleted)
 	return &Task{
+		Id:            id,
 		Name:          name,
 		Description:   description,
 		Period:        period,
@@ -227,6 +231,7 @@ func (pd *PsqlData) GetGroup(id GroupId) *Group {
 		Logger.Fatal(err)
 	}
 	return &Group{
+		Id:   id,
 		Name: name,
 	}
 }

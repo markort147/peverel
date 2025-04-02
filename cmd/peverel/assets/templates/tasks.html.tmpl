@@ -12,42 +12,42 @@
         </tr>
         </thead>
         <tbody>
-        {{ range $id, $task := . }}
+        {{ range . }}
         <tr>
-            <td id="group-task-{{ $id }}"
-                hx-get="task/{{ $id }}/group/name" hx-swap="innerHTML" hx-trigger="load" hx-target="this"></td>
-            <td>{{ $task.Name }}</td>
-            <td>{{ $task.Period }}d</td>
-            <td id="next-time-{{ $id }}"
-                hx-get="task/{{ $id }}/next-time" hx-swap="innerHTML" hx-trigger="load" hx-target="#next-time-{{ $id }}"></td>
+            <td id="group-task-{{ .Id }}"
+                hx-get="task/{{ .Id }}/group/name" hx-swap="innerHTML" hx-trigger="load" hx-target="this"></td>
+            <td>{{ .Name }}</td>
+            <td>{{ .Period }}d</td>
+            <td id="next-time-{{ .Id }}"
+                hx-get="task/{{ .Id }}/next-time" hx-swap="innerHTML" hx-trigger="load" hx-target="#next-time-{{ .Id }}"></td>
             <td>
                 <button class="button" title="mark as completed"
-                        hx-put="task/{{ $id }}/complete" hx-target="#next-time-{{ $id }}" hx-swap="innerHTML">
+                        hx-put="task/{{ .Id }}/complete" hx-target="#next-time-{{ .Id }}" hx-swap="innerHTML">
                 <span class="icon has-text-success">
                     <i class="fas fa-check"></i>
                 </span>
                 </button>
                 <button class="button" title="unassign from the current group"
-                        hx-put="task/{{ $id }}/unassign" hx-target="#main-view" hx-swap="innerHTML">
+                        hx-put="task/{{ .Id }}/unassign" hx-target="#main-view" hx-swap="innerHTML">
                 <span class="icon has-text-warning">
                     <i class="fas fa-object-ungroup"></i>
                 </span>
                 </button>
                 <button class="button" title="edit task"
-                        hx-get="forms/edit-task?id={{ $id }}" hx-target="#main-view" hx-swap="innerHTML">
+                        hx-get="forms/edit-task?id={{ .Id }}" hx-target="#main-view" hx-swap="innerHTML">
                     <span class="icon has-text-link">
                         <i class="fas fa-edit"></i>
                     </span>
                 </button>
                 <button class="button" title="delete task"
-                        hx-delete="task/{{ $id }}" hx-target="#main-view" hx-swap="innerHTML"
-                        hx-confirm='Are you sure you want to delete "{{ $task.Name }}"?'>
+                        hx-delete="task/{{ .Id }}" hx-target="#main-view" hx-swap="innerHTML"
+                        hx-confirm='Are you sure you want to delete "{{ .Name }}"?'>
                     <span class="icon has-text-danger">
                         <i class="fas fa-trash-alt"></i>
                     </span>
                 </button>
                 <button class="button" title="description"
-                        hx-get="task-info-active?id={{ $id }}" hx-target="#task-info" hx-swap="outerHTML">
+                        hx-get="task-info-active?id={{ .Id }}" hx-target="#task-info" hx-swap="outerHTML">
                     <span class="icon has-text-info">
                         <i class="fas fa-info"></i>
                     </span>
@@ -61,8 +61,8 @@
 {{ end }}
 
 {{ define "tasks-options" }}
-{{ range $id, $task := . }}
-<option value="{{ $id }}">{{ $task.Name }}</option>
+{{ range . }}
+<option value="{{ .Id }}">{{ .Name }}</option>
 {{ end }}
 {{ end }}
 

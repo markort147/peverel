@@ -1,30 +1,30 @@
 {{ define "groups" }}
 <div class="section is-flex is-flex-direction-row is-align-items-center is-flex-wrap-wrap">
-    {{ range $id, $group := . }}
+    {{ range . }}
     <div class="box">
         <div class="hero">
             <div class="hero-head">
                 <div class="is-flex is-flex-direction-row is-align-items-center is-justify-content-space-between">
                     <div>
-                        <p class="title">{{ $group.Name }}</p>
+                        <p class="title">{{ .Name }}</p>
                     </div>
                     <div class="field is-grouped">
                         <p class="control">
                             <button class="button" title="expand group"
-                                    hx-get="/tasks?group={{ $id }}" hx-target="#group-tasks-{{ $id }}" hx-swap="innerHTML">
+                                    hx-get="/tasks?group={{ .Id }}" hx-target="#group-tasks-{{ .Id }}" hx-swap="innerHTML">
                                 <span class="icon has-text-info is-small"><i class="fas fa-expand-arrows-alt"></i></span>
                             </button>
                         </p>
                         <p class="control">
                             <button class="button" title="close group"
-                                    hx-get="empty-string" hx-target="#group-tasks-{{ $id }}" hx-swap="innerHTML">
+                                    hx-get="empty-string" hx-target="#group-tasks-{{ .Id }}" hx-swap="innerHTML">
                                 <span class="icon has-text-warning is-small"><i class="fas fa-compress-arrows-alt"></i></span>
                             </button>
                         </p>
                         <p class="control">
                             <button class="button" title="delete group"
-                                    hx-delete="group/{{ $id }}" hx-target="#main-view" hx-swap="innerHTML"
-                                    hx-confirm='Are you sure you want to delete "{{ $group.Name }}"?'>
+                                    hx-delete="group/{{ .Id }}" hx-target="#main-view" hx-swap="innerHTML"
+                                    hx-confirm='Are you sure you want to delete "{{ .Name }}"?'>
                                 <span class="icon has-text-danger is-small"><i class="fas fa-trash-alt"></i></span>
                             </button>
                         </p>
@@ -32,14 +32,14 @@
                 </div>
                 <div>
                     <div hx-get="/tasks?group=-1&layout=options" hx-trigger="load" hx-swap="beforeend"
-                         hx-target="#assign-task-to-{{ $id }}">
-                        <select class="select" id="assign-task-to-{{ $id }}"
-                                name="assign-task" hx-put="/group/{{ $id }}/assign" hx-target="#main-view" hx-swap="innerHTML">
+                         hx-target="#assign-task-to-{{ .Id }}">
+                        <select class="select" id="assign-task-to-{{ .Id }}"
+                                name="assign-task" hx-put="/group/{{ .Id }}/assign" hx-target="#main-view" hx-swap="innerHTML">
                             <option value="" disabled selected>Assign a task...</option>
                         </select>
                     </div>
                 </div>
-                <div class="hero-body" id="group-tasks-{{ $id }}"></div>
+                <div class="hero-body" id="group-tasks-{{ .Id }}"></div>
             </div>
         </div>
     </div>
@@ -74,7 +74,7 @@
 {{ end }}
 
 {{ define "groups-options" }}
-{{ range $id, $group := . }}
-<option value="{{ $id }}">{{ $group.Name }}</option>
+{{ range . }}
+<option value="{{ .Id }}">{{ .Name }}</option>
 {{ end }}
 {{ end }}
