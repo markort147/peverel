@@ -1,21 +1,23 @@
 {{ define "tasks-table" }}
+{{ template "task-info-inactive" }}
 <div class="table-container">
     <table class="table is-striped is-hoverable is-fullwidth">
         <thead>
         <tr>
+            <th>Group</th>
             <th>Name</th>
-            <th>Desc</th>
             <th>Freq</th>
-            <th>Next Time</th>
+            <th>Next</th>
             <th></th>
         </tr>
         </thead>
         <tbody>
         {{ range $id, $task := . }}
         <tr>
+            <td id="group-task-{{ $id }}"
+                hx-get="task/{{ $id }}/group/name" hx-swap="innerHTML" hx-trigger="load" hx-target="this"></td>
             <td>{{ $task.Name }}</td>
-            <td>{{ $task.Description }}</td>
-            <td>Every {{ $task.Period }} days</td>
+            <td>{{ $task.Period }}d</td>
             <td id="next-time-{{ $id }}"
                 hx-get="task/{{ $id }}/next-time" hx-swap="innerHTML" hx-trigger="load" hx-target="#next-time-{{ $id }}"></td>
             <td>
@@ -33,16 +35,22 @@
                 </button>
                 <button class="button" title="edit task"
                         hx-get="forms/edit-task?id={{ $id }}" hx-target="#main-view" hx-swap="innerHTML">
-                <span class="icon has-text-link">
-                    <i class="fas fa-edit"></i>
-                </span>
+                    <span class="icon has-text-link">
+                        <i class="fas fa-edit"></i>
+                    </span>
                 </button>
                 <button class="button" title="delete task"
                         hx-delete="task/{{ $id }}" hx-target="#main-view" hx-swap="innerHTML"
                         hx-confirm='Are you sure you want to delete "{{ $task.Name }}"?'>
-                <span class="icon has-text-danger">
-                    <i class="fas fa-trash-alt"></i>
-                </span>
+                    <span class="icon has-text-danger">
+                        <i class="fas fa-trash-alt"></i>
+                    </span>
+                </button>
+                <button class="button" title="description"
+                        hx-get="task-info-active?id={{ $id }}" hx-target="#task-info" hx-swap="outerHTML">
+                    <span class="icon has-text-info">
+                        <i class="fas fa-info"></i>
+                    </span>
                 </button>
             </td>
         </tr>
@@ -56,4 +64,23 @@
 {{ range $id, $task := . }}
 <option value="{{ $id }}">{{ $task.Name }}</option>
 {{ end }}
+{{ end }}
+
+{{ define "task-info-active" }}
+<div id="task-info" class="modal is-active">
+    <div class="modal-background"></div>
+    <div class="modal-card">
+        <header class="modal-card-head">
+            <p class="modal-card-title">{{ .Name }}</p>
+            <button class="delete" aria-label="close" hx-get="task-info-inactive" hx-target="#task-info" hx-swap="outerHTML"></button>
+        </header>
+        <section class="modal-card-body">
+            {{ .Info }}
+        </section>
+    </div>
+</div>
+{{ end }}
+
+{{ define "task-info-inactive" }}
+<div id="task-info" hidden></div>
 {{ end }}

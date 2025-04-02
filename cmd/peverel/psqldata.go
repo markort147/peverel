@@ -2,6 +2,7 @@ package main
 
 import (
 	"database/sql"
+	"fmt"
 	_ "github.com/lib/pq"
 	"time"
 )
@@ -29,14 +30,6 @@ func (pd *PsqlData) AddTask(task *Task) (id TaskId) {
 	if err != nil {
 		Logger.Fatal(err)
 	}
-	//defer rows.Close()
-	//if err != nil {
-	//	Logger.Fatal(err)
-	//}
-
-	//last, _ := rows.LastInsertId()
-	//id = TaskId(last)
-	//rows.Scan(&id)
 	return id
 }
 
@@ -48,10 +41,6 @@ func (pd *PsqlData) AddGroup(group *Group) (id GroupId) {
 	if err != nil {
 		Logger.Fatal(err)
 	}
-
-	//last, _ := rows.LastInsertId()
-	//id = GroupId(last)
-	//rows.Scan(&id)
 	return id
 }
 
@@ -62,7 +51,6 @@ func (pd *PsqlData) CompleteTask(id TaskId) error {
 
 func (pd *PsqlData) SetRelation(groupId GroupId, taskIds ...TaskId) error {
 	for _, taskId := range taskIds {
-		Logger.Debugf("adding task %d to group %d", taskId, groupId)
 		_, err := pd.DB.Exec("UPDATE tasks SET group_id=$1 WHERE id=$2", groupId, taskId)
 		if err != nil {
 			return err
@@ -241,4 +229,22 @@ func (pd *PsqlData) GetGroup(id GroupId) *Group {
 	return &Group{
 		Name: name,
 	}
+}
+
+func (pd *PsqlData) GetTaskGroupName(id TaskId) (string, error) {
+	var name string
+	rows, err := pd.DB.Query("SELECT g.name FROM groups g JOIN tasks t ON g.id = t.group_id WHERE t.id=$1", id)
+	if err != nil {
+		return "", fmt.Errorf("sql error while getting group name for task %d: %w", id, err)
+	}
+	defer rows.Close()
+
+	if !rows.Next() {
+		return "no group", nil
+	}
+
+	if err = rows.Scan(&name); err != nil {
+		return "", fmt.Errorf("error scanning group name for task %d: %w", id, err)
+	}
+	return name, nil
 }

@@ -17,6 +17,3 @@ type Data interface {
 	DeleteTask(id TaskId) error
 	DeleteGroup(id GroupId) error
 }
-
-type TaskId int
-type GroupId int

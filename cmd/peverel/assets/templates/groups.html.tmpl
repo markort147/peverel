@@ -1,24 +1,34 @@
 {{ define "groups" }}
-<div class="section is-flex is-flex-direction-row is-align-items-center is-justify-content-space-between is-flex-wrap-wrap">
+<div class="section is-flex is-flex-direction-row is-align-items-center is-flex-wrap-wrap">
     {{ range $id, $group := . }}
     <div class="box">
         <div class="hero">
             <div class="hero-head">
-                <div class="is-flex is-flex-direction-row">
-                    <h4 class="title">{{ $group.Name }}</h4>
-                    <button class="button" title="expand group"
-                            hx-get="/tasks?group={{ $id }}" hx-target="#group-tasks-{{ $id }}" hx-swap="innerHTML">
-                        <span class="icon has-text-info is-small"><i class="fas fa-expand-arrows-alt"></i></span>
-                    </button>
-                    <button class="button" title="close group"
-                            hx-get="empty-string" hx-target="#group-tasks-{{ $id }}" hx-swap="innerHTML">
-                        <span class="icon has-text-warning is-small"><i class="fas fa-compress-arrows-alt"></i></span>
-                    </button>
-                    <button class="button" title="delete group"
-                            hx-delete="group/{{ $id }}" hx-target="#main-view" hx-swap="innerHTML"
-                            hx-confirm='Are you sure you want to delete "{{ $group.Name }}"?'>
-                        <span class="icon has-text-danger is-small"><i class="fas fa-trash-alt"></i></span>
-                    </button>
+                <div class="is-flex is-flex-direction-row is-align-items-center is-justify-content-space-between">
+                    <div>
+                        <p class="title">{{ $group.Name }}</p>
+                    </div>
+                    <div class="field is-grouped">
+                        <p class="control">
+                            <button class="button" title="expand group"
+                                    hx-get="/tasks?group={{ $id }}" hx-target="#group-tasks-{{ $id }}" hx-swap="innerHTML">
+                                <span class="icon has-text-info is-small"><i class="fas fa-expand-arrows-alt"></i></span>
+                            </button>
+                        </p>
+                        <p class="control">
+                            <button class="button" title="close group"
+                                    hx-get="empty-string" hx-target="#group-tasks-{{ $id }}" hx-swap="innerHTML">
+                                <span class="icon has-text-warning is-small"><i class="fas fa-compress-arrows-alt"></i></span>
+                            </button>
+                        </p>
+                        <p class="control">
+                            <button class="button" title="delete group"
+                                    hx-delete="group/{{ $id }}" hx-target="#main-view" hx-swap="innerHTML"
+                                    hx-confirm='Are you sure you want to delete "{{ $group.Name }}"?'>
+                                <span class="icon has-text-danger is-small"><i class="fas fa-trash-alt"></i></span>
+                            </button>
+                        </p>
+                    </div>
                 </div>
                 <div>
                     <div hx-get="/tasks?group=-1&layout=options" hx-trigger="load" hx-swap="beforeend"
@@ -37,16 +47,24 @@
     <div class="box">
         <div class="hero">
             <div class="hero-head">
-                <div class="is-flex is-flex-direction-row">
-                    <h4 class="title">No Group</h4>
-                    <button class="button" title="expand group"
-                            hx-get="/tasks?group=-1" hx-target="#no-group-tasks" hx-swap="innerHTML">
-                        <span class="icon has-text-info is-small"><i class="fas fa-expand-arrows-alt"></i></span>
-                    </button>
-                    <button class="button" title="close group"
-                            hx-get="empty-string" hx-target="#no-group-tasks" hx-swap="innerHTML">
-                        <span class="icon has-text-warning is-small"><i class="fas fa-compress-arrows-alt"></i></span>
-                    </button>
+                <div class="is-flex is-flex-direction-row is-align-items-center is-justify-content-space-between">
+                    <div>
+                        <p class="title">No Group</p>
+                    </div>
+                    <div class="field is-grouped">
+                        <p class="control">
+                            <button class="button" title="expand group"
+                                    hx-get="/tasks?group=-1" hx-target="#no-group-tasks" hx-swap="innerHTML">
+                                <span class="icon has-text-info is-small"><i class="fas fa-expand-arrows-alt"></i></span>
+                            </button>
+                        </p>
+                        <p class="control">
+                            <button class="button" title="close group"
+                                    hx-get="empty-string" hx-target="#no-group-tasks" hx-swap="innerHTML">
+                                <span class="icon has-text-warning is-small"><i class="fas fa-compress-arrows-alt"></i></span>
+                            </button>
+                        </p>
+                    </div>
                 </div>
                 <div class="hero-body" id="no-group-tasks"></div>
             </div>

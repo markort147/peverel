@@ -455,3 +455,12 @@ func GetTasksCount(c echo.Context) error {
 func GetDashboard(c echo.Context) error {
 	return c.Render(http.StatusOK, "dashboard", nil)
 }
+
+func GetTaskGroupName(c echo.Context) error {
+	taskId, _ := strconv.Atoi(c.Param("id"))
+	group, err := data.GetTaskGroupName(TaskId(taskId))
+	if err != nil {
+		return err
+	}
+	return c.String(http.StatusOK, group)
+}

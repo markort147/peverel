@@ -12,8 +12,7 @@ import (
 //go:embed assets/*
 var assetsFS embed.FS
 
-// var data Data = &MemoryData{}
-var data Data = &PsqlData{}
+var data = &PsqlData{}
 
 func main() {
 
@@ -62,7 +61,8 @@ func main() {
 				e.GET("/task/:id/next-time", GetTaskNextTime)
 				e.POST("/task", PostTask)
 				e.PUT("/task/:id", PutTask)
-				//e.GET("/task/:id/group", GetTaskGroup)
+				e.GET("/task-info-active", GetTaskDesc)
+				e.GET("/task/:id/group/name", GetTaskGroupName)
 				e.POST("/group", PostGroup)
 				e.PUT("/task/:id/complete", PutTaskComplete)
 				e.PUT("/task/:id/unassign", PutTaskUnassign)
@@ -71,6 +71,7 @@ func main() {
 				e.POST("/tasks/mock", CreateMockTasks)
 				e.PUT("/group/:id/assign", PutGroupAssignTask)
 				e.GET("/tasks/count", GetTasksCount)
+				e.GET("/task-info-inactive", PostTaskInfoDisable)
 			},
 		},
 	)
@@ -82,8 +83,15 @@ func main() {
 	wgServer.Wait()
 }
 
-//func GetTaskGroup(c echo.Context) error {
-//	taskId, _ := strconv.Atoi(c.Param("id"))
-//	task := data.GetTask(TaskId(taskId))
-//	group := data.GetGroup(task.GroupId)
-//}
+func PostTaskInfoDisable(c echo.Context) error {
+	return c.Render(http.StatusOK, "task-info-inactive", nil)
+}
+
+func GetTaskDesc(c echo.Context) error {
+	id, _ := strconv.Atoi(c.QueryParam("id"))
+	task := data.GetTask(TaskId(id))
+	return c.Render(http.StatusOK, "task-info-active", map[string]any{
+		"Name": task.Name,
+		"Info": task.Description,
+	})
+}

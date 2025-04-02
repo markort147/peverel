@@ -12,51 +12,47 @@
 
 <body>
 <div class="container">
-    <nav class="navbar is-fixed-top" role="navigation" aria-label="main navigation">
-        <div class="navbar-brand">
-            <div class="navbar-item">
-                <div class="title is-family-monospace is-italic is-underlined has-text-danger">peverel</div>
-            </div>
-        </div>
-        <!--            <div class="navbar-item">-->
-        <!--                <button hx-post="/tasks/mock" hx-target="#main-view" hx-swap="innerHTML">-->
-        <!--                    <span>create mock tasks</span>-->
-        <!--                </button>-->
-        <!--            </div>-->
-        <div class="navbar-item">
-            <button class="button is-danger is-light" hx-get="/dashboard" hx-target="#main-view" hx-swap="innerHTML">
-                <span class="icon"><i class="fas fa-chart-line"></i></span>
-                <span>HOME</span>
-            </button>
-        </div>
-        <div class="navbar-start is-flex is-flex-direction-row is-justify-content-center">
-            <div class="navbar-item">
-                <button class="button is-info is-light" hx-get="/groups" hx-target="#main-view" hx-swap="innerHTML">
-                    <span class="icon"><i class="fas fa-list-ul"></i></span>
-                    <span>TASKS</span>
-                </button>
+    <div class="section">
+        <nav class="navbar is-fixed-top" role="navigation" aria-label="main navigation">
+            <div class="navbar-brand">
+                <div class="navbar-item">
+                    <div class="title is-family-monospace is-italic is-underlined has-text-danger">peverel</div>
+                </div>
             </div>
             <!--            <div class="navbar-item">-->
-            <!--                <button class="button is-info is-light" hx-get="/groups" hx-target="#main-view" hx-swap="innerHTML">-->
-            <!--                    <span class="icon"><i class="fas fa-layer-group"></i></span>-->
-            <!--                    <span>GROUPS</span>-->
+            <!--                <button hx-post="/tasks/mock" hx-target="#main-view" hx-swap="innerHTML">-->
+            <!--                    <span>create mock tasks</span>-->
             <!--                </button>-->
             <!--            </div>-->
-            <div class="navbar-item">
-                <button class="button is-success is-light" hx-get="/forms/new-task" hx-target="#main-view" hx-swap="innerHTML">
-                    <span class="icon"><i class="fas fa-plus"></i></span>
-                    <span>TASK</span>
-                </button>
+            <div class="navbar-start is-flex is-flex-direction-row is-justify-content-center">
+                <div class="navbar-item">
+                    <button class="button is-danger is-light" hx-get="/dashboard" hx-target="#main-view" hx-swap="innerHTML">
+                        <span class="icon"><i class="fas fa-chart-line"></i></span>
+                        <span>HOME</span>
+                    </button>
+                </div>
+                <div class="navbar-item">
+                    <button class="button is-info is-light" hx-get="/groups" hx-target="#main-view" hx-swap="innerHTML">
+                        <span class="icon"><i class="fas fa-list-ul"></i></span>
+                        <span>TASKS</span>
+                    </button>
+                </div>
+                <div class="navbar-item">
+                    <button class="button is-success is-light" hx-get="/forms/new-task" hx-target="#main-view" hx-swap="innerHTML">
+                        <span class="icon"><i class="fas fa-plus"></i></span>
+                        <span>TASK</span>
+                    </button>
+                </div>
+                <div class="navbar-item">
+                    <button class="button is-success is-light" hx-get="/forms/new-group" hx-target="#main-view" hx-swap="innerHTML">
+                        <span class="icon"><i class="fas fa-plus"></i></span>
+                        <span>GROUP</span>
+                    </button>
+                </div>
             </div>
-            <div class="navbar-item">
-                <button class="button is-success is-light" hx-get="/forms/new-group" hx-target="#main-view" hx-swap="innerHTML">
-                    <span class="icon"><i class="fas fa-plus"></i></span>
-                    <span>GROUP</span>
-                </button>
-            </div>
-        </div>
-    </nav>
-    <div id="main-view" class="section" hx-get="/dashboard" hx-trigger="load" hx-swap="innerHTML"></div>
+        </nav>
+    </div>
+    <div id="main-view" hx-get="/dashboard" hx-trigger="load" hx-swap="innerHTML"></div>
 </div>
 </body>
 </html>
