@@ -1,0 +1,5 @@
+{{ define "tasks-options" }}
+{{ range . }}
+<option value="{{ .Id }}">{{ .Name }}</option>
+{{ end }}
+{{ end }}

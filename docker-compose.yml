@@ -20,8 +20,7 @@ services:
       PEVEREL_DB_CONN_STRING: "postgresql://peverel:peverel@db/peverel?sslmode=disable"
     build:
       context: .
-      dockerfile: Dockerfile
-#      no_cache: true
+      dockerfile: cmd/peverel/Dockerfile
     container_name: peverel_app
     ports:
       - "8081:8080"

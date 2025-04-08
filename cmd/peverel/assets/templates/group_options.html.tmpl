@@ -1,0 +1,5 @@
+{{ define "groups-options" }}
+{{ range . }}
+<option value="{{ .Id }}">{{ .Name }}</option>
+{{ end }}
+{{ end }}

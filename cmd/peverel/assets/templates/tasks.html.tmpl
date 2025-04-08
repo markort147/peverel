@@ -1,5 +1,5 @@
 {{ define "tasks-table" }}
-{{ template "task-info-inactive" }}
+{{ template "modal-inactive" }}
 <div class="table-container">
     <table class="table is-striped is-hoverable is-fullwidth">
         <thead>
@@ -47,7 +47,7 @@
                     </span>
                 </button>
                 <button class="button" title="description"
-                        hx-get="task-info-active?id={{ .Id }}" hx-target="#task-info" hx-swap="outerHTML">
+                        hx-get="modal/task-info?id={{ .Id }}" hx-target="#modal" hx-swap="outerHTML">
                     <span class="icon has-text-info">
                         <i class="fas fa-info"></i>
                     </span>
@@ -58,29 +58,4 @@
         </tbody>
     </table>
 </div>
-{{ end }}
-
-{{ define "tasks-options" }}
-{{ range . }}
-<option value="{{ .Id }}">{{ .Name }}</option>
-{{ end }}
-{{ end }}
-
-{{ define "task-info-active" }}
-<div id="task-info" class="modal is-active">
-    <div class="modal-background"></div>
-    <div class="modal-card">
-        <header class="modal-card-head">
-            <p class="modal-card-title">{{ .Name }}</p>
-            <button class="delete" aria-label="close" hx-get="task-info-inactive" hx-target="#task-info" hx-swap="outerHTML"></button>
-        </header>
-        <section class="modal-card-body">
-            {{ .Info }}
-        </section>
-    </div>
-</div>
-{{ end }}
-
-{{ define "task-info-inactive" }}
-<div id="task-info" hidden></div>
 {{ end }}

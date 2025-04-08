@@ -61,7 +61,7 @@ func main() {
 				e.GET("/task/:id/next-time", GetTaskNextTime)
 				e.POST("/task", PostTask)
 				e.PUT("/task/:id", PutTask)
-				e.GET("/task-info-active", GetTaskDesc)
+				e.GET("/modal/task-info", GetModalTaskInfo)
 				e.GET("/task/:id/group/name", GetTaskGroupName)
 				e.POST("/group", PostGroup)
 				e.PUT("/task/:id/complete", PutTaskComplete)
@@ -71,7 +71,7 @@ func main() {
 				e.POST("/tasks/mock", CreateMockTasks)
 				e.PUT("/group/:id/assign", PutGroupAssignTask)
 				e.GET("/tasks/count", GetTasksCount)
-				e.GET("/task-info-inactive", PostTaskInfoDisable)
+				e.GET("/modal/inactive", GetModalInactive)
 			},
 		},
 	)
@@ -83,14 +83,14 @@ func main() {
 	wgServer.Wait()
 }
 
-func PostTaskInfoDisable(c echo.Context) error {
-	return c.Render(http.StatusOK, "task-info-inactive", nil)
+func GetModalInactive(c echo.Context) error {
+	return c.Render(http.StatusOK, "modal-inactive", nil)
 }
 
-func GetTaskDesc(c echo.Context) error {
+func GetModalTaskInfo(c echo.Context) error {
 	id, _ := strconv.Atoi(c.QueryParam("id"))
 	task := data.GetTask(TaskId(id))
-	return c.Render(http.StatusOK, "task-info-active", map[string]any{
+	return c.Render(http.StatusOK, "modal-task-info", map[string]any{
 		"Name": task.Name,
 		"Info": task.Description,
 	})
