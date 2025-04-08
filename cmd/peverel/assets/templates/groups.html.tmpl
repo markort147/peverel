@@ -11,7 +11,7 @@
                     <div class="field is-grouped">
                         <p class="control">
                             <button class="button" title="expand group"
-                                    hx-get="/tasks?group={{ .Id }}" hx-target="#group-tasks-{{ .Id }}" hx-swap="innerHTML">
+                                    hx-get="/tasks?group={{ .Id }}&layout=levels" hx-target="#group-tasks-{{ .Id }}" hx-swap="innerHTML">
                                 <span class="icon has-text-info is-small"><i class="fas fa-expand-arrows-alt"></i></span>
                             </button>
                         </p>
@@ -54,7 +54,7 @@
                     <div class="field is-grouped">
                         <p class="control">
                             <button class="button" title="expand group"
-                                    hx-get="/tasks?group=-1" hx-target="#no-group-tasks" hx-swap="innerHTML">
+                                    hx-get="/tasks?group=-1&layout=levels" hx-target="#no-group-tasks" hx-swap="innerHTML">
                                 <span class="icon has-text-info is-small"><i class="fas fa-expand-arrows-alt"></i></span>
                             </button>
                         </p>

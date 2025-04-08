@@ -89,10 +89,17 @@ func GetTasks(c echo.Context) error {
 		return t1.LastCompleted.AddDate(0, 0, t1.Period).Before(t2.LastCompleted.AddDate(0, 0, t2.Period))
 	})
 
-	template := "tasks-table"
 	layout := c.QueryParam("layout")
-	if layout == "options" {
+	var template string
+	switch layout {
+	case "options":
 		template = "tasks-options"
+	case "table":
+		template = "tasks-table"
+	case "levels":
+		template = "tasks-levels"
+	default:
+		template = "tasks-levels"
 	}
 
 	return c.Render(http.StatusOK, template, filteredTasks)

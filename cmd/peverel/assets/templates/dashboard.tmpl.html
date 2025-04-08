@@ -17,10 +17,10 @@
 </div>
 <div class="section">
     <p class="title">Expired</p>
-    <div hx-get="/tasks?days=0" hx-trigger="load" hx-swap="innerHTML"></div>
+    <div hx-get="/tasks?days=0&layout=levels" hx-trigger="load" hx-swap="innerHTML"></div>
 </div>
 <div class="section">
     <p class="title">Incoming</p>
-    <div hx-get="/tasks?days=7&expired=false" hx-trigger="load" hx-swap="innerHTML"></div>
+    <div hx-get="/tasks?days=7&expired=false&layout=levels" hx-trigger="load" hx-swap="innerHTML"></div>
 </div>
 {{ end }}
