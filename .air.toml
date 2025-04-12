@@ -5,7 +5,7 @@ tmp_dir = "tmp"
 [build]
 args_bin = ["-config", "./config.yml"]
 #bin = "./tmp/main"
-full_bin = "PEVEREL_PORT=8080 PEVEREL_LOG_LEVEL=debug PEVEREL_LOG_OUTPUT=stdout PEVEREL_DB_CONN_STRING=\"postgresql://peverel:peverel@localhost/peverel?sslmode=disable\" ./tmp/main"
+full_bin = "SERVER_PORT=8080 LOG_LEVEL=debug LOG_OUTPUT=stdout DB_CONN_STRING=\"postgresql://peverel:peverel@localhost/peverel?sslmode=disable\" ./tmp/main"
 cmd = "go build -o ./tmp/main ./cmd/peverel/"
 delay = 1000
 exclude_dir = ["assets", "tmp", "vendor", "testdata", "dev"]

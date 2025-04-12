@@ -1,4 +1,4 @@
-package main
+package tasks
 
 type Data interface {
 	Init(string)
