@@ -1,4 +1,4 @@
-package main
+package tasks
 
 type Group struct {
 	Id   GroupId

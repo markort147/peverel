@@ -1,0 +1,15 @@
+{{ define "email" }}
+<p>Hey babes,</p>
+<p>just to let you know, there are like <span style="color: red">{{ .Count }}</span> expired tasks today.</p>
+<p>Are we going to make this house stink like hell?</p>
+<p>Here are the expired tasks:</p>
+<ul>
+    {{ range .Tasks }}
+    <li>{{ .Name }} ({{ .Group }}) - {{ .Description }}</li>
+    {{ end }}
+</ul>
+<p>To update the tasks, please visit <a href="http://raspberrypi.local/peverel">raspberrypi.local/peverel</a> while connected to our home Wi-Fi.</p>
+<br/>
+<p>With so much <span style="color: hotpink">love</span>,</p>
+<p><strong>Peverel</strong></p>
+{{ end }}

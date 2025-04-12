@@ -1,8 +1,8 @@
-package main
+package log
 
 import (
 	"fmt"
-	"github.com/labstack/gommon/log"
+	glog "github.com/labstack/gommon/log"
 	"io"
 	"os"
 )
@@ -14,14 +14,14 @@ The global logger is used to log messages that are not specific to a particular 
 ==================================
 */
 
-type LogConfig struct {
-	Level  log.Lvl
+type Config struct {
+	Level  glog.Lvl
 	Output io.Writer
 }
 
-var Logger = log.New("global")
+var Logger = glog.New("global")
 
-func InitLog(cfg *LogConfig) error {
+func InitLog(cfg *Config) error {
 	if err := fixConfig(cfg); err != nil {
 		return fmt.Errorf("log configuration error: %w", err)
 	}
@@ -31,9 +31,9 @@ func InitLog(cfg *LogConfig) error {
 	return nil
 }
 
-func fixConfig(cfg *LogConfig) error {
+func fixConfig(cfg *Config) error {
 	if cfg.Level == 0 {
-		cfg.Level = log.INFO
+		cfg.Level = glog.INFO
 	}
 	if cfg.Output == nil {
 		cfg.Output = os.Stdout
@@ -41,24 +41,24 @@ func fixConfig(cfg *LogConfig) error {
 	return nil
 }
 
-func parseLogLevel(level string) log.Lvl {
+func ParseLogLevel(level string) glog.Lvl {
 	switch level {
 	case "debug":
-		return log.DEBUG
+		return glog.DEBUG
 	case "info":
-		return log.INFO
+		return glog.INFO
 	case "warn":
-		return log.WARN
+		return glog.WARN
 	case "error":
-		return log.ERROR
+		return glog.ERROR
 	case "off":
-		return log.OFF
+		return glog.OFF
 	default:
 		panic("invalid log level")
 	}
 }
 
-func parseLogOutput(output string) (io.Writer, func()) {
+func ParseLogOutput(output string) (io.Writer, func()) {
 	switch output {
 	case "stdout":
 		return os.Stdout, nil

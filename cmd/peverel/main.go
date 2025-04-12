@@ -4,6 +4,8 @@ import (
 	"embed"
 	"fmt"
 	"github.com/labstack/echo/v4"
+	"github.com/markor147/peverel/internal/log"
+	"github.com/markor147/peverel/internal/tasks"
 	"net/http"
 	"os"
 	"strconv"
@@ -12,22 +14,22 @@ import (
 //go:embed assets/*
 var assetsFS embed.FS
 
-var data = &PsqlData{}
+var data = &tasks.PsqlData{}
 
 func main() {
 
-	port, _ := strconv.Atoi(os.Getenv("PEVEREL_PORT"))
-	logLevel := os.Getenv("PEVEREL_LOG_LEVEL")
-	logOutput := os.Getenv("PEVEREL_LOG_OUTPUT")
-	connStr := os.Getenv("PEVEREL_DB_CONN_STRING")
+	port, _ := strconv.Atoi(os.Getenv("SERVER_PORT"))
+	logLevel := os.Getenv("LOG_LEVEL")
+	logOutput := os.Getenv("LOG_OUTPUT")
+	connStr := os.Getenv("DB_CONN_STRING")
 
 	// log configuration
-	parsedLogLevel := parseLogLevel(logLevel)
-	parsedLogOutput, closeFunc := parseLogOutput(logOutput)
+	parsedLogLevel := log.ParseLogLevel(logLevel)
+	parsedLogOutput, closeFunc := log.ParseLogOutput(logOutput)
 	if closeFunc != nil {
 		defer closeFunc()
 	}
-	if err := InitLog(&LogConfig{
+	if err := log.InitLog(&log.Config{
 		Output: parsedLogOutput,
 		Level:  parsedLogLevel,
 	}); err != nil {
@@ -38,15 +40,15 @@ func main() {
 		os.Exit(1)
 	}
 	//Logger.SetHeader(logHeader)
-	Logger.SetHeader("${time_rfc3339} ${short_file}:${line} ${level} ${message}")
+	log.Logger.SetHeader("${time_rfc3339} ${short_file}:${line} ${level} ${message}")
 
 	//data = NewMemoryData()
-	data.Init(connStr)
+	data.Init(connStr, log.Logger)
 
 	wgServer, err := StartServer(
 		&Config{
 			Port:       port,
-			Logger:     Logger,
+			Logger:     log.Logger,
 			FileSystem: assetsFS,
 			RoutesRegister: func(e *Echo) {
 				e.GET("empty-string", func(c echo.Context) error {
@@ -76,22 +78,9 @@ func main() {
 		},
 	)
 	if err != nil {
-		Logger.Fatalf("Error starting server: %v", err)
+		log.Logger.Fatalf("Error starting server: %v", err)
 	}
-	defer Logger.Info("Server exited")
+	defer log.Logger.Info("Server exited")
 
 	wgServer.Wait()
-}
-
-func GetModalInactive(c echo.Context) error {
-	return c.Render(http.StatusOK, "modal-inactive", nil)
-}
-
-func GetModalTaskInfo(c echo.Context) error {
-	id, _ := strconv.Atoi(c.QueryParam("id"))
-	task := data.GetTask(TaskId(id))
-	return c.Render(http.StatusOK, "modal-task-info", map[string]any{
-		"Name": task.Name,
-		"Info": task.Description,
-	})
 }
