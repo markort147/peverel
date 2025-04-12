@@ -72,7 +72,7 @@ func main() {
 		// if the scheduled time is today, add 24 hours to it
 		initialDuration := schedule.Sub(now)
 		if initialDuration < 0 {
-			initialDuration = time.Duration(scheduledHours) * time.Hour
+			initialDuration += time.Duration(scheduledHours) * time.Hour
 		}
 		// send the email after the initial duration
 		log.Logger.Infof("Waiting for next tick: %f mins", initialDuration.Minutes())
@@ -80,8 +80,8 @@ func main() {
 		sendEmail(tmpl, data, emailSender, emailRecipients, smtpServer, smtpPort, smtpUsername, smtpPassword)
 		log.Logger.Infof("Waiting for next tick")
 
-		// set up a ticker to send the email every 24 hours
-		ticker := time.NewTicker(24 * time.Hour)
+		// set up a ticker to send the email every scheduledHours hours
+		ticker := time.NewTicker(time.Duration(scheduledHours) * time.Hour)
 		defer ticker.Stop()
 		for range ticker.C {
 			sendEmail(tmpl, data, emailSender, emailRecipients, smtpServer, smtpPort, smtpUsername, smtpPassword)
