@@ -29,14 +29,14 @@ services:
 
   notifier:
     environment:
-      DB_CONN_STRING: "postgresql://peverel:peverel@localhost/peverel?sslmode=disable"
+      DB_CONN_STRING: "postgresql://peverel:peverel@db/peverel?sslmode=disable"
       EMAIL_SENDER: ${NOTIFIER_EMAIL_SENDER}
       EMAIL_RECIPIENTS: ${NOTIFIER_EMAIL_RECIPIENTS}
       SMTP_SERVER: ${NOTIFIER_SMTP_SERVER}
       SMTP_PORT: ${NOTIFIER_SMTP_PORT}
       SMTP_USERNAME: ${NOTIFIER_SMTP_USERNAME}
       SMTP_PASSWORD: ${NOTIFIER_SMTP_PASSWORD}
-      SCHEDULED_TIME: "05:00"
+      SCHEDULED_TIME: "23:20+00"
       SCHEDULED_HOURS: 24
       LOG_LEVEL: info
       LOG_OUTPUT: stdout
