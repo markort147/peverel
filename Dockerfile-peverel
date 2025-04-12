@@ -8,8 +8,9 @@ COPY go.mod go.sum ./
 
 RUN go mod download
 
-#copy all the content of the current directory to /app
 COPY ./cmd/peverel ./cmd/peverel
+
+COPY ./internal ./internal
 
 RUN CGO_ENABLED=0 GOOS=linux go build -o ./main ./cmd/peverel
 
