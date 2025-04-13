@@ -1,6 +1,7 @@
 package log
 
 import (
+	"errors"
 	"fmt"
 	glog "github.com/labstack/gommon/log"
 	"io"
@@ -32,6 +33,9 @@ func InitLog(cfg *Config) error {
 }
 
 func fixConfig(cfg *Config) error {
+	if cfg == nil {
+		return errors.New("nil config")
+	}
 	if cfg.Level == 0 {
 		cfg.Level = glog.INFO
 	}
