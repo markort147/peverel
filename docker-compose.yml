@@ -3,9 +3,9 @@ services:
     image: postgres:latest
     container_name: peverel_db
     environment:
-      POSTGRES_USER: peverel
-      POSTGRES_PASSWORD: peverel
-      POSTGRES_DB: peverel
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_NAME}
     volumes:
       - peverel_data:/var/lib/postgresql/data
       - ./init.sql:/docker-entrypoint-initdb.d/init.sql
@@ -17,7 +17,7 @@ services:
       SERVER_PORT: 8080
       LOG_LEVEL: info
       LOG_OUTPUT: stdout
-      DB_CONN_STRING: "postgresql://peverel:peverel@db/peverel?sslmode=disable"
+      DB_CONN_STRING: "postgresql://${DB_USER}:${DB_PASSWORD}@db/${DB_NAME}?sslmode=disable"
     build:
       context: .
       dockerfile: Dockerfile-peverel
@@ -29,7 +29,7 @@ services:
 
   notifier:
     environment:
-      DB_CONN_STRING: "postgresql://peverel:peverel@db/peverel?sslmode=disable"
+      DB_CONN_STRING: "postgresql://${DB_USER}:${DB_PASSWORD}@db/${DB_NAME}?sslmode=disable"
       EMAIL_SENDER: ${NOTIFIER_EMAIL_SENDER}
       EMAIL_RECIPIENTS: ${NOTIFIER_EMAIL_RECIPIENTS}
       SMTP_SERVER: ${NOTIFIER_SMTP_SERVER}
