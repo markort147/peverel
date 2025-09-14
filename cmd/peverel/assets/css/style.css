@@ -7,6 +7,10 @@
     /* --accent: rgb(8, 98, 172); */
 }
 
+* {
+    box-sizing: border-box;
+}
+
 body {
     background-color: var(--bg);
     color: var(--fg);
@@ -19,6 +23,7 @@ body {
     overflow: hidden;
     width: 100dvw;
     height: 100dvh;
+    padding: 1px;
 }
 
 #topbar {
@@ -37,6 +42,7 @@ body {
     color: var(--accent);
     font-style: italic;
     text-decoration: underline;
+    text-align: center;
 }
 
 #topbar-brand {
@@ -73,14 +79,24 @@ main {
 
 .tasks-table-compact {
     border-collapse: collapse;
+    width: 100%;
 }
 
-.tasks-table-compact td {
+.tasks-table-compact td, th {
     border-bottom: solid 0.5px var(--fg);
+    padding: 5px;
+}
+
+.tasks-table-compact tr:nth-child(even) {
+    background-color: color-mix(in srgb, var(--accent) 6%, var(--bg) 94%);
+}
+
+.tasks-table-compact tr:nth-child(odd) {
+    background-color: color-mix(in srgb, var(--accent) 12%, var(--bg) 88%);
 }
 
 .tasks-table-compact tr:hover {
-    background-color: color-mix(in srgb, var(--accent) 30%, var(--bg) 70%);
+    background-color: color-mix(in srgb, var(--accent) 40%, var(--bg) 60%);
 }
 
 .tasks-table-compact button {
@@ -88,7 +104,7 @@ main {
     cursor: pointer;
     border: none;
     font-size: x-large;
-    padding: 10px;
+    padding: 5px;
 }
 
 .tasks-table-compact button:hover {
@@ -101,4 +117,25 @@ main {
 
 .task-info-button {
     color: blue;
+}
+
+#settings-buttons {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+#settings-buttons button {
+    cursor: pointer;
+    background-color: inherit;
+    color: inherit;
+    padding: 5px;
+    margin: 10px;
+    border: none;
+
+    font-size: xx-large;
+}
+
+#settings-buttons button:hover {
+    color: var(--accent);
 }

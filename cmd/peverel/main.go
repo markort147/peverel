@@ -58,17 +58,17 @@ func main() {
 						"Content": "home",
 					})
 				})
-				e.GET("/add-task", func(c echo.Context) error {
+				e.GET("/settings", func(c echo.Context) error {
 					return c.Render(http.StatusOK, "layout", map[string]string{
-						"Title":   "peverel - new task",
-						"Content": "add-task",
+						"Title":   "peverel - settings",
+						"Content": "settings",
 					})
 				})
 				e.GET("/page/home", func(c echo.Context) error {
 					return c.Render(http.StatusOK, "page/home", nil)
 				})
-				e.GET("/page/add-task", func(c echo.Context) error {
-					return c.Render(http.StatusOK, "page/add-task", nil)
+				e.GET("/page/settings", func(c echo.Context) error {
+					return c.Render(http.StatusOK, "page/settings", nil)
 				})
 				e.GET("empty-string", func(c echo.Context) error {
 					return c.String(http.StatusOK, "")
