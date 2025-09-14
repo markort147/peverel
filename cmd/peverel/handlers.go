@@ -35,7 +35,7 @@ func PostTask(c echo.Context) error {
 		}
 	}
 
-	return c.String(http.StatusOK, "task modified successfully")
+	return c.String(http.StatusOK, "task created successfully")
 }
 
 func PostGroup(c echo.Context) error {
@@ -406,7 +406,7 @@ func PutTask(c echo.Context) error {
 			log.Logger.Errorf("Error adding group %d to task %d: %v", groupId, taskId, err)
 		}
 	}
-	return c.String(http.StatusOK, "task added successfully")
+	return c.String(http.StatusOK, "task modified successfully")
 }
 
 func GetEditTaskForm(c echo.Context) error {

@@ -1,3 +1,32 @@
-{{ define "page/add-task" }}
-<h2>Add a new task</h2>
-{{ end }}
+{{define "page/add-task"}}
+<form id="form-add-task" hx-post="/task" hx-swap="none">
+
+    <label class="label" for="name">Name</label>
+    <div class="control">
+        <input class="input" type="text" name="name" id="name">
+    </div>
+
+    <label class="label" for="description">Description</label>
+    <div class="control">
+        <input class="input" type="text" name="description" id="description">
+    </div>
+
+    <label class="label" for="period">Period (days)</label>
+    <div class="control">
+        <input class="input" type="number" name="period" id="period">
+    </div>
+
+    <label class="label" for="group-select">Group</label>
+    <div class="select" hx-get="/groups?layout=options" hx-trigger="load" hx-swap="beforeend" hx-target="#group-select">
+        <select id="group-select" name="group">
+            <option value="-1" selected>None</option>
+        </select>
+    </div>
+
+    <button type="submit">
+        <span><i class="fas fa-paper-plane"></i>submit</span>
+    </button>
+
+    </div>
+</form>
+{{end}}

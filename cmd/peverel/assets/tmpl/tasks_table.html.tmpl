@@ -10,12 +10,12 @@
                 <button class="task-table-button task-confirm-button" title="mark as completed" hx-put="task/{{ .Id }}/complete"
                     hx-target="closest .tasks-table-compact" hx-swap="innerHTML">
                     <span>
-                        <i class="fas fa-check"></i>
+                        <i class="fas fa-circle-check"></i>
                     </span>
                 </button>
                 <button class="task-table-button task-info-button" title="description" popovertarget="popover-{{.Id}}">
                     <span>
-                        <i class="fas fa-info"></i>
+                        <i class="fas fa-circle-info"></i>
                     </span>
                 </button>
                 <div popover class="task-desc" id="popover-{{.Id}}">

@@ -46,6 +46,7 @@ func StartServer(cfg *Config) (*sync.WaitGroup, error) {
 	// serve index and register custom routes
 	e.Renderer = newTemplateRenderer(cfg.FileSystem, "assets/tmpl/*", cfg.CustomFuncs)
 	e.FileFS("/style.css", "assets/css/style.css", cfg.FileSystem)
+	e.FileFS("/favicon.ico", "assets/ico/favicon.ico", cfg.FileSystem)
 	if cfg.RoutesRegister != nil {
 		cfg.RoutesRegister(e)
 	}

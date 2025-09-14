@@ -78,12 +78,10 @@ main {
 }
 
 .tasks-table-compact {
-    border-collapse: collapse;
     width: 100%;
 }
 
 .tasks-table-compact td, th {
-    border-bottom: solid 0.5px var(--fg);
     padding: 5px;
 }
 
@@ -137,5 +135,17 @@ main {
 }
 
 #settings-buttons button:hover {
+    color: var(--accent);
+}
+
+#form-add-task button {
+    background-color: inherit;
+    cursor: pointer;
+    border: none;
+    font-size: x-large;
+    padding: 5px;
+}
+
+#form-add-task button:hover {
     color: var(--accent);
 }
