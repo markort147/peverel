@@ -1,0 +1,4 @@
+{{ define "page/home" }}
+<h1 class="brand">peverel</h1>
+<div hx-get="/tasks?layout=table" hx-trigger="load" hx-swap="outerHTML"></div>
+{{ end }}

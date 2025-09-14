@@ -2,12 +2,13 @@ package main
 
 import (
 	"fmt"
-	"github.com/labstack/echo/v4"
-	"github.com/markor147/peverel/internal/log"
-	ts "github.com/markor147/peverel/internal/tasks"
 	"net/http"
 	"strconv"
 	"time"
+
+	"github.com/labstack/echo/v4"
+	"github.com/markor147/peverel/internal/log"
+	ts "github.com/markor147/peverel/internal/tasks"
 )
 
 func GetNewTaskForm(c echo.Context) error {
@@ -34,7 +35,7 @@ func PostTask(c echo.Context) error {
 		}
 	}
 
-	return GetDashboard(c)
+	return c.String(http.StatusOK, "task modified successfully")
 }
 
 func PostGroup(c echo.Context) error {
@@ -84,7 +85,13 @@ func PutTaskComplete(c echo.Context) error {
 	id, _ := strconv.Atoi(c.Param("id"))
 	taskId := ts.TaskId(id)
 	_ = data.CompleteTask(taskId)
-	return c.HTML(http.StatusOK, renderTaskNextTime(taskId))
+
+	tasks, err := data.Tasks("", "", true)
+	if err != nil {
+		return err
+	}
+
+	return c.Render(http.StatusOK, "tasks-table", tasks)
 }
 
 func CreateMockTasks(c echo.Context) error {
@@ -315,7 +322,7 @@ func CreateMockTasks(c echo.Context) error {
 		LastCompleted: now,
 	})
 
-	return GetDashboard(c)
+	return c.String(http.StatusOK, "mock tasks created")
 }
 
 func GetTaskNextTime(c echo.Context) error {
@@ -361,7 +368,7 @@ func DeleteTask(c echo.Context) error {
 		log.Logger.Errorf("Error deleting task: %v", err)
 		return err
 	}
-	return GetDashboard(c)
+	return c.String(http.StatusOK, "task deleted successfully")
 }
 
 func DeleteGroup(c echo.Context) error {
@@ -399,7 +406,7 @@ func PutTask(c echo.Context) error {
 			log.Logger.Errorf("Error adding group %d to task %d: %v", groupId, taskId, err)
 		}
 	}
-	return GetDashboard(c)
+	return c.String(http.StatusOK, "task added successfully")
 }
 
 func GetEditTaskForm(c echo.Context) error {
@@ -420,10 +427,6 @@ func GetTasksCount(c echo.Context) error {
 		return err
 	}
 	return c.String(http.StatusOK, fmt.Sprintf("%d", count))
-}
-
-func GetDashboard(c echo.Context) error {
-	return c.Render(http.StatusOK, "dashboard", nil)
 }
 
 func GetTaskGroupName(c echo.Context) error {

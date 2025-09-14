@@ -3,12 +3,13 @@ package main
 import (
 	"embed"
 	"fmt"
-	"github.com/labstack/echo/v4"
-	"github.com/markor147/peverel/internal/log"
-	"github.com/markor147/peverel/internal/tasks"
 	"net/http"
 	"os"
 	"strconv"
+
+	"github.com/labstack/echo/v4"
+	"github.com/markor147/peverel/internal/log"
+	"github.com/markor147/peverel/internal/tasks"
 )
 
 //go:embed assets/*
@@ -51,13 +52,30 @@ func main() {
 			Logger:     log.Logger,
 			FileSystem: assetsFS,
 			RoutesRegister: func(e *Echo) {
+				e.GET("/", func(c echo.Context) error {
+					return c.Render(http.StatusOK, "layout", map[string]string{
+						"Title":   "peverel - home",
+						"Content": "home",
+					})
+				})
+				e.GET("/add-task", func(c echo.Context) error {
+					return c.Render(http.StatusOK, "layout", map[string]string{
+						"Title":   "peverel - new task",
+						"Content": "add-task",
+					})
+				})
+				e.GET("/page/home", func(c echo.Context) error {
+					return c.Render(http.StatusOK, "page/home", nil)
+				})
+				e.GET("/page/add-task", func(c echo.Context) error {
+					return c.Render(http.StatusOK, "page/add-task", nil)
+				})
 				e.GET("empty-string", func(c echo.Context) error {
 					return c.String(http.StatusOK, "")
 				})
 				e.GET("/forms/new-task", GetNewTaskForm)
 				e.GET("/forms/edit-task", GetEditTaskForm)
 				e.GET("/forms/new-group", GetNewGroupForm)
-				e.GET("/dashboard", GetDashboard)
 				e.GET("/groups", GetGroups)
 				e.GET("/tasks", GetTasks)
 				e.GET("/task/:id/next-time", GetTaskNextTime)

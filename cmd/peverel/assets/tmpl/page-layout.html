@@ -1,0 +1,43 @@
+{{ define "layout" }}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>{{ .Title }}</title>
+    <script src="https://unpkg.com/htmx.org/dist/htmx.min.js"></script>
+    <!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@1.0.2/css/bulma.min.css"> -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.9.0/css/all.min.css"
+        integrity="sha512-q3eWabyZPc1XTCmF+8/LuE1ozpg5xxn7iO89yfSOd5/oKvyqLngoNGsx8jq92Y8eXJ/IRxQbEC+FGSYxtk2oiw=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="/style.css" />
+</head>
+
+<body>
+    <div id="main-container">
+
+        <nav id="topbar">
+            <div id="topbar-brand" class="brand">
+                <a href="/">peverel</a>
+            </div>
+            <div id="topbar-buttons">
+                <button class="topbar-button" onclick="location.href='/'" type="button">
+                    <span class="icon"><i class="fas fa-home"></i></span>
+                </button>
+                <button class="topbar-button" hx-get="/groups" hx-target="#main-view" hx-swap="innerHTML">
+                    <span class="icon"><i class="fas fa-list-ul"></i></span>
+                </button>
+                <button class="topbar-button" onclick="location.href='/add-task'" type="button">
+                    <span class="icon"><i class="fas fa-tools"></i></span>
+                </button>
+            </div>
+        </nav>
+
+        <main hx-get="page/{{ .Content }}" hx-trigger="load"></main>
+
+    </div>
+</body>
+
+</html>
+{{ end }}

@@ -4,8 +4,6 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"github.com/labstack/echo/v4/middleware"
-	"github.com/labstack/gommon/log"
 	"html/template"
 	"io"
 	"io/fs"
@@ -15,6 +13,9 @@ import (
 	"sync"
 	"syscall"
 	"time"
+
+	"github.com/labstack/echo/v4/middleware"
+	"github.com/labstack/gommon/log"
 
 	"github.com/labstack/echo/v4"
 )
@@ -43,8 +44,8 @@ func StartServer(cfg *Config) (*sync.WaitGroup, error) {
 	e.Use(middleware.Recover())
 
 	// serve index and register custom routes
-	e.Renderer = newTemplateRenderer(cfg.FileSystem, "assets/templates/*", cfg.CustomFuncs)
-	e.FileFS("/", "assets/index.html", cfg.FileSystem)
+	e.Renderer = newTemplateRenderer(cfg.FileSystem, "assets/tmpl/*", cfg.CustomFuncs)
+	e.FileFS("/style.css", "assets/css/style.css", cfg.FileSystem)
 	if cfg.RoutesRegister != nil {
 		cfg.RoutesRegister(e)
 	}

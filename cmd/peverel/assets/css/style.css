@@ -1,0 +1,104 @@
+:root {
+    --fg: rgb(26, 26, 26);
+    --bg: rgb(230, 230, 230);
+    --accent: rgb(172, 8, 172);
+    /* --bg: rgb(30, 26, 19); */
+    /* --fg: rgb(253, 241, 220); */
+    /* --accent: rgb(8, 98, 172); */
+}
+
+body {
+    background-color: var(--bg);
+    color: var(--fg);
+    margin: 0;
+}
+
+#main-container {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    width: 100dvw;
+    height: 100dvh;
+}
+
+#topbar {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+
+    flex: 0 0 auto;
+    padding: 5px;
+
+    background-color: var(--fg);
+    color: var(--bg);
+}
+
+.brand {
+    color: var(--accent);
+    font-style: italic;
+    text-decoration: underline;
+}
+
+#topbar-brand {
+    font-size: x-large;
+    padding: 10px;
+}
+
+#topbar-brand a {
+    color: inherit;
+}
+
+.topbar-button {
+    background-color: inherit;
+    color: inherit;
+    border: none;
+    cursor: pointer;
+    padding: 10px;
+    font-size: large;
+}
+
+.topbar-button:hover {
+    color: var(--accent);
+}
+
+main {
+    overflow: scroll;
+    flex: 1 1 auto;
+    padding: 15px;
+}
+
+.task-desc {
+    color: var(--accent);
+}
+
+.tasks-table-compact {
+    border-collapse: collapse;
+}
+
+.tasks-table-compact td {
+    border-bottom: solid 0.5px var(--fg);
+}
+
+.tasks-table-compact tr:hover {
+    background-color: color-mix(in srgb, var(--accent) 30%, var(--bg) 70%);
+}
+
+.tasks-table-compact button {
+    background-color: inherit;
+    cursor: pointer;
+    border: none;
+    font-size: x-large;
+    padding: 10px;
+}
+
+.tasks-table-compact button:hover {
+    color: var(--accent);
+}
+
+.task-confirm-button {
+    color: green;
+}
+
+.task-info-button {
+    color: blue;
+}
