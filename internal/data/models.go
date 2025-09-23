@@ -1,4 +1,4 @@
-package tasks
+package data
 
 import "time"
 
@@ -11,3 +11,10 @@ type Task struct {
 }
 
 type TaskId int
+
+type Group struct {
+	Id   GroupId
+	Name string
+}
+
+type GroupId int

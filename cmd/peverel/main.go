@@ -8,14 +8,14 @@ import (
 	"strconv"
 
 	"github.com/labstack/echo/v4"
+	dt "github.com/markor147/peverel/internal/data"
 	"github.com/markor147/peverel/internal/log"
-	"github.com/markor147/peverel/internal/tasks"
 )
 
 //go:embed assets/*
 var assetsFS embed.FS
 
-var data = &tasks.PsqlData{}
+var data = &dt.SqliteData{}
 
 func main() {
 
@@ -40,10 +40,8 @@ func main() {
 		}
 		os.Exit(1)
 	}
-	//Logger.SetHeader(logHeader)
 	log.Logger.SetHeader("${time_rfc3339} ${short_file}:${line} ${level} ${message}")
 
-	//data = NewMemoryData()
 	data.Init(connStr, log.Logger)
 
 	wgServer, err := StartServer(

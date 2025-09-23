@@ -4,10 +4,10 @@ tmp_dir = "tmp"
 
 [build]
 args_bin = ["-config", "./config.yml"]
-full_bin = "SERVER_PORT=8080 LOG_LEVEL=debug LOG_OUTPUT=stdout DB_CONN_STRING=\"postgresql://peverel:peverel@localhost/peverel?sslmode=disable\" ./tmp/main"
+full_bin = "SERVER_PORT=8080 LOG_LEVEL=debug LOG_OUTPUT=stdout DB_CONN_STRING=\"./db/tasks.db\" ./tmp/main"
 cmd = "go build -o ./tmp/main ./cmd/peverel/"
 delay = 1000
-exclude_dir = ["assets", "tmp", "vendor", "testdata", "dev"]
+exclude_dir = ["assets", "tmp", "vendor", "testdata", "dev", "db"]
 exclude_file = []
 exclude_regex = ["_test.go"]
 exclude_unchanged = false

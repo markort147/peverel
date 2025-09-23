@@ -7,8 +7,8 @@ import (
 	"time"
 
 	"github.com/labstack/echo/v4"
+	dt "github.com/markor147/peverel/internal/data"
 	"github.com/markor147/peverel/internal/log"
-	ts "github.com/markor147/peverel/internal/tasks"
 )
 
 func GetNewTaskForm(c echo.Context) error {
@@ -21,7 +21,7 @@ func GetNewGroupForm(c echo.Context) error {
 
 func PostTask(c echo.Context) error {
 	period, _ := strconv.Atoi(c.FormValue("period"))
-	taskId := data.AddTask(&ts.Task{
+	taskId := data.AddTask(&dt.Task{
 		Name:        c.FormValue("name"),
 		Description: c.FormValue("description"),
 		Period:      period,
@@ -29,7 +29,7 @@ func PostTask(c echo.Context) error {
 
 	groupId, _ := strconv.Atoi(c.FormValue("group"))
 	if groupId != -1 {
-		err := data.SetRelation(ts.GroupId(groupId), taskId)
+		err := data.SetRelation(dt.GroupId(groupId), taskId)
 		if err != nil {
 			log.Logger.Errorf("Error adding group %d to task %d: %v", groupId, taskId, err)
 		}
@@ -39,14 +39,14 @@ func PostTask(c echo.Context) error {
 }
 
 func PostGroup(c echo.Context) error {
-	data.AddGroup(&ts.Group{
+	data.AddGroup(&dt.Group{
 		Name: c.FormValue("name"),
 	})
 	return c.NoContent(http.StatusOK)
 }
 
 func GetTasks(c echo.Context) error {
-	var tasks []*ts.Task
+	var tasks []*dt.Task
 	groupId := c.QueryParam("group")
 	days := c.QueryParam("days")
 	expired := c.QueryParam("expired") != "false"
@@ -83,7 +83,7 @@ func GetGroups(c echo.Context) error {
 
 func PutTaskComplete(c echo.Context) error {
 	id, _ := strconv.Atoi(c.Param("id"))
-	taskId := ts.TaskId(id)
+	taskId := dt.TaskId(id)
 	_ = data.CompleteTask(taskId)
 
 	tasks, err := data.Tasks("", "", true)
@@ -97,22 +97,22 @@ func PutTaskComplete(c echo.Context) error {
 func CreateMockTasks(c echo.Context) error {
 	now := time.Now()
 
-	bath := data.AddGroup(&ts.Group{
+	bath := data.AddGroup(&dt.Group{
 		Name: "Bathroom",
 	})
-	toilet := data.AddTask(&ts.Task{
+	toilet := data.AddTask(&dt.Task{
 		Name:          "Toilet",
 		Description:   "Clean the toilet",
 		Period:        2,
 		LastCompleted: now,
 	})
-	bathroomFixtures := data.AddTask(&ts.Task{
+	bathroomFixtures := data.AddTask(&dt.Task{
 		Name:          "Sink and shower",
 		Description:   "Clean the sink and the shower",
 		Period:        7,
 		LastCompleted: now,
 	})
-	bathroomFloor := data.AddTask(&ts.Task{
+	bathroomFloor := data.AddTask(&dt.Task{
 		Name:          "Bathroom floor",
 		Description:   "Vacuum and mop the bathroom floor",
 		Period:        7,
@@ -120,10 +120,10 @@ func CreateMockTasks(c echo.Context) error {
 	})
 	data.SetRelation(bath, toilet, bathroomFixtures, bathroomFloor)
 
-	upHallway := data.AddGroup(&ts.Group{
+	upHallway := data.AddGroup(&dt.Group{
 		Name: "Up Hallway",
 	})
-	upHallwayCarpet := data.AddTask(&ts.Task{
+	upHallwayCarpet := data.AddTask(&dt.Task{
 		Name:          "Up Hallway carpet",
 		Description:   "Vacuum the up hallway carpet",
 		Period:        10,
@@ -131,22 +131,22 @@ func CreateMockTasks(c echo.Context) error {
 	})
 	data.SetRelation(upHallway, upHallwayCarpet)
 
-	studio := data.AddGroup(&ts.Group{
+	studio := data.AddGroup(&dt.Group{
 		Name: "Studio",
 	})
-	studioFloor := data.AddTask(&ts.Task{
+	studioFloor := data.AddTask(&dt.Task{
 		Name:          "Studio floor",
 		Description:   "Vacuum and mop studio floor",
 		Period:        10,
 		LastCompleted: now,
 	})
-	studioDesk := data.AddTask(&ts.Task{
+	studioDesk := data.AddTask(&dt.Task{
 		Name:          "Studio desk",
 		Description:   "Tidy up and dust the study desk",
 		Period:        7,
 		LastCompleted: now,
 	})
-	studioShelves := data.AddTask(&ts.Task{
+	studioShelves := data.AddTask(&dt.Task{
 		Name:          "Studio shelves",
 		Description:   "Tidy up and dust the study shelves",
 		Period:        14,
@@ -154,16 +154,16 @@ func CreateMockTasks(c echo.Context) error {
 	})
 	data.SetRelation(studio, studioShelves, studioFloor, studioDesk)
 
-	guest := data.AddGroup(&ts.Group{
+	guest := data.AddGroup(&dt.Group{
 		Name: "Guest Room",
 	})
-	guestFloor := data.AddTask(&ts.Task{
+	guestFloor := data.AddTask(&dt.Task{
 		Name:          "Guest room floor",
 		Description:   "Vacuum the guest room carpet",
 		Period:        30,
 		LastCompleted: now,
 	})
-	guestFurniture := data.AddTask(&ts.Task{
+	guestFurniture := data.AddTask(&dt.Task{
 		Name:          "Guest room furniture",
 		Description:   "Tidy up and dust the guest room furniture",
 		Period:        14,
@@ -171,22 +171,22 @@ func CreateMockTasks(c echo.Context) error {
 	})
 	data.SetRelation(guest, guestFloor, guestFurniture)
 
-	bed := data.AddGroup(&ts.Group{
+	bed := data.AddGroup(&dt.Group{
 		Name: "Bedroom",
 	})
-	bedFloor := data.AddTask(&ts.Task{
+	bedFloor := data.AddTask(&dt.Task{
 		Name:          "Guest room floor",
 		Description:   "Vacuum the guest room carpet",
 		Period:        7,
 		LastCompleted: now,
 	})
-	bedFurniture := data.AddTask(&ts.Task{
+	bedFurniture := data.AddTask(&dt.Task{
 		Name:          "Guest room furniture",
 		Description:   "Tidy up and dust the guest room furniture",
 		Period:        10,
 		LastCompleted: now,
 	})
-	bedSheets := data.AddTask(&ts.Task{
+	bedSheets := data.AddTask(&dt.Task{
 		Name:          "Sheets",
 		Description:   "Change the sheets in the bedroom",
 		Period:        7,
@@ -194,34 +194,34 @@ func CreateMockTasks(c echo.Context) error {
 	})
 	data.SetRelation(bed, bedSheets, bedFloor, bedFurniture)
 
-	kitchen := data.AddGroup(&ts.Group{
+	kitchen := data.AddGroup(&dt.Group{
 		Name: "Kitchen",
 	})
-	kitchenSink := data.AddTask(&ts.Task{
+	kitchenSink := data.AddTask(&dt.Task{
 		Name:          "Kitchen sink",
 		Description:   "Clean and remove limescale from the kitchen sink",
 		Period:        3,
 		LastCompleted: now,
 	})
-	kitchenFloor := data.AddTask(&ts.Task{
+	kitchenFloor := data.AddTask(&dt.Task{
 		Name:          "Kitchen floor",
 		Description:   "Vacuum and mop the kitchen floor",
 		Period:        7,
 		LastCompleted: now,
 	})
-	fridge := data.AddTask(&ts.Task{
+	fridge := data.AddTask(&dt.Task{
 		Name:          "Fridge",
 		Description:   "Clean the fridge",
 		Period:        30,
 		LastCompleted: now,
 	})
-	kitchenSurfaces := data.AddTask(&ts.Task{
+	kitchenSurfaces := data.AddTask(&dt.Task{
 		Name:          "Kitchen surfaces",
 		Description:   "Clean the surfaces in the kitchen",
 		Period:        7,
 		LastCompleted: now,
 	})
-	kitchenTidy := data.AddTask(&ts.Task{
+	kitchenTidy := data.AddTask(&dt.Task{
 		Name:          "Kitchen items",
 		Description:   "Tidy up the items in the kitchen cabinets",
 		Period:        30,
@@ -229,22 +229,22 @@ func CreateMockTasks(c echo.Context) error {
 	})
 	data.SetRelation(kitchen, kitchenSurfaces, kitchenTidy, kitchenSink, kitchenFloor, fridge)
 
-	living := data.AddGroup(&ts.Group{
+	living := data.AddGroup(&dt.Group{
 		Name: "Living Room",
 	})
-	livingFloor := data.AddTask(&ts.Task{
+	livingFloor := data.AddTask(&dt.Task{
 		Name:          "Living room carpet",
 		Description:   "Vacuum the living room carpet",
 		Period:        10,
 		LastCompleted: now,
 	})
-	livingFurnitures := data.AddTask(&ts.Task{
+	livingFurnitures := data.AddTask(&dt.Task{
 		Name:          "Living room furniture",
 		Description:   "Tidy up and dust the living room furniture",
 		Period:        7,
 		LastCompleted: now,
 	})
-	sofa := data.AddTask(&ts.Task{
+	sofa := data.AddTask(&dt.Task{
 		Name:          "Sofa",
 		Description:   "Change the sheet of the sofa",
 		Period:        14,
@@ -252,16 +252,16 @@ func CreateMockTasks(c echo.Context) error {
 	})
 	data.SetRelation(living, livingFurnitures, livingFloor, sofa)
 
-	hall := data.AddGroup(&ts.Group{
+	hall := data.AddGroup(&dt.Group{
 		Name: "Hall",
 	})
-	hallFloor := data.AddTask(&ts.Task{
+	hallFloor := data.AddTask(&dt.Task{
 		Name:          "Hall floor",
 		Description:   "Vacuum and mop the hall floor",
 		Period:        7,
 		LastCompleted: now,
 	})
-	shoeRack := data.AddTask(&ts.Task{
+	shoeRack := data.AddTask(&dt.Task{
 		Name:          "Shoerack",
 		Description:   "Clean the shoe rack",
 		Period:        30,
@@ -269,16 +269,16 @@ func CreateMockTasks(c echo.Context) error {
 	})
 	data.SetRelation(hall, hallFloor, shoeRack)
 
-	stairs := data.AddGroup(&ts.Group{
+	stairs := data.AddGroup(&dt.Group{
 		Name: "Stairs",
 	})
-	stairsCarpet := data.AddTask(&ts.Task{
+	stairsCarpet := data.AddTask(&dt.Task{
 		Name:          "Stairs carpet",
 		Description:   "Vacuum the stairs carpet",
 		Period:        14,
 		LastCompleted: now,
 	})
-	handrail := data.AddTask(&ts.Task{
+	handrail := data.AddTask(&dt.Task{
 		Name:          "Handrail",
 		Description:   "Clean the stairs handrail",
 		Period:        30,
@@ -286,10 +286,10 @@ func CreateMockTasks(c echo.Context) error {
 	})
 	data.SetRelation(stairs, stairsCarpet, handrail)
 
-	downHallway := data.AddGroup(&ts.Group{
+	downHallway := data.AddGroup(&dt.Group{
 		Name: "Down Hallway",
 	})
-	downHallwayFloor := data.AddTask(&ts.Task{
+	downHallwayFloor := data.AddTask(&dt.Task{
 		Name:          "Down hallway floor",
 		Description:   "Vacuum and mop the down hallway floor",
 		Period:        7,
@@ -297,25 +297,25 @@ func CreateMockTasks(c echo.Context) error {
 	})
 	data.SetRelation(downHallway, downHallwayFloor)
 
-	data.AddTask(&ts.Task{
+	data.AddTask(&dt.Task{
 		Name:          "Marco's bike cleaning",
 		Description:   "Clean frame and chain",
 		Period:        30,
 		LastCompleted: now,
 	})
-	data.AddTask(&ts.Task{
+	data.AddTask(&dt.Task{
 		Name:          "Marzia's bike cleaning",
 		Description:   "Clean frame and chain",
 		Period:        30,
 		LastCompleted: now,
 	})
-	data.AddTask(&ts.Task{
+	data.AddTask(&dt.Task{
 		Name:          "Marco's bike oil",
 		Description:   "Put oil on chain and gears",
 		Period:        7,
 		LastCompleted: now,
 	})
-	data.AddTask(&ts.Task{
+	data.AddTask(&dt.Task{
 		Name:          "Marzia's bike oil",
 		Description:   "Put oil on chain and gears",
 		Period:        7,
@@ -327,10 +327,10 @@ func CreateMockTasks(c echo.Context) error {
 
 func GetTaskNextTime(c echo.Context) error {
 	taskId, _ := strconv.Atoi(c.Param("id"))
-	return c.HTML(http.StatusOK, renderTaskNextTime(ts.TaskId(taskId)))
+	return c.HTML(http.StatusOK, renderTaskNextTime(dt.TaskId(taskId)))
 }
 
-func renderTaskNextTime(taskId ts.TaskId) string {
+func renderTaskNextTime(taskId dt.TaskId) string {
 	task := data.GetTask(taskId)
 
 	layout := "20060102"
@@ -354,7 +354,7 @@ func PutGroupAssignTask(c echo.Context) error {
 	groupId, _ := strconv.Atoi(c.Param("id"))
 	taskId, _ := strconv.Atoi(c.FormValue("assign-task"))
 
-	err := data.SetRelation(ts.GroupId(groupId), ts.TaskId(taskId))
+	err := data.SetRelation(dt.GroupId(groupId), dt.TaskId(taskId))
 	if err != nil {
 		log.Logger.Errorf("add group assign task err: %v", err)
 	}
@@ -364,7 +364,7 @@ func PutGroupAssignTask(c echo.Context) error {
 
 func DeleteTask(c echo.Context) error {
 	taskId, _ := strconv.Atoi(c.Param("id"))
-	if err := data.DeleteTask(ts.TaskId(taskId)); err != nil {
+	if err := data.DeleteTask(dt.TaskId(taskId)); err != nil {
 		log.Logger.Errorf("Error deleting task: %v", err)
 		return err
 	}
@@ -373,7 +373,7 @@ func DeleteTask(c echo.Context) error {
 
 func DeleteGroup(c echo.Context) error {
 	groupId, _ := strconv.Atoi(c.Param("id"))
-	if err := data.DeleteGroup(ts.GroupId(groupId)); err != nil {
+	if err := data.DeleteGroup(dt.GroupId(groupId)); err != nil {
 		log.Logger.Errorf("Error deleting group: %v", err)
 		return err
 	}
@@ -382,7 +382,7 @@ func DeleteGroup(c echo.Context) error {
 
 func PutTaskUnassign(c echo.Context) error {
 	taskId, _ := strconv.Atoi(c.Param("id"))
-	if err := data.UnassignTask(ts.TaskId(taskId)); err != nil {
+	if err := data.UnassignTask(dt.TaskId(taskId)); err != nil {
 		log.Logger.Errorf("Error unassigning task: %v", err)
 		return err
 	}
@@ -392,7 +392,7 @@ func PutTaskUnassign(c echo.Context) error {
 func PutTask(c echo.Context) error {
 	taskId, _ := strconv.Atoi(c.Param("id"))
 	period, _ := strconv.Atoi(c.FormValue("period"))
-	if err := data.UpdateTask(ts.TaskId(taskId), &ts.Task{
+	if err := data.UpdateTask(dt.TaskId(taskId), &dt.Task{
 		Name:        c.FormValue("name"),
 		Description: c.FormValue("description"),
 		Period:      period,
@@ -401,7 +401,7 @@ func PutTask(c echo.Context) error {
 	}
 	groupId, _ := strconv.Atoi(c.FormValue("group"))
 	if groupId != -1 {
-		err := data.SetRelation(ts.GroupId(groupId), ts.TaskId(taskId))
+		err := data.SetRelation(dt.GroupId(groupId), dt.TaskId(taskId))
 		if err != nil {
 			log.Logger.Errorf("Error adding group %d to task %d: %v", groupId, taskId, err)
 		}
@@ -411,7 +411,7 @@ func PutTask(c echo.Context) error {
 
 func GetEditTaskForm(c echo.Context) error {
 	id, _ := strconv.Atoi(c.QueryParam("id"))
-	task := data.GetTask(ts.TaskId(id))
+	task := data.GetTask(dt.TaskId(id))
 	return c.Render(http.StatusOK, "task-form", map[string]any{
 		"Id":          id,
 		"Name":        task.Name,
@@ -431,7 +431,7 @@ func GetTasksCount(c echo.Context) error {
 
 func GetTaskGroupName(c echo.Context) error {
 	taskId, _ := strconv.Atoi(c.Param("id"))
-	group, err := data.GetTaskGroupName(ts.TaskId(taskId))
+	group, err := data.GetTaskGroupName(dt.TaskId(taskId))
 	if err != nil {
 		return err
 	}
@@ -444,7 +444,7 @@ func GetModalInactive(c echo.Context) error {
 
 func GetModalTaskInfo(c echo.Context) error {
 	id, _ := strconv.Atoi(c.QueryParam("id"))
-	task := data.GetTask(ts.TaskId(id))
+	task := data.GetTask(dt.TaskId(id))
 	return c.Render(http.StatusOK, "modal-task-info", map[string]any{
 		"Name": task.Name,
 		"Info": task.Description,
