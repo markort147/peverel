@@ -16,54 +16,30 @@ import (
 var assetsFS embed.FS
 
 func main() {
-
-	port, _ := strconv.Atoi(os.Getenv("SERVER_PORT"))
+	// Log initialisation
 	logLevel := os.Getenv("LOG_LEVEL")
 	logOutput := os.Getenv("LOG_OUTPUT")
-	connStr := os.Getenv("DB_CONN_STRING")
-
-	// Parsing log level
-	parsedLogLevel, err := log.ParseLogLevel(logLevel)
+	logHeader := "${time_rfc3339} ${short_file}:${line} ${level} ${message}"
+	closer, err := log.Init(logLevel, logOutput, logHeader)
 	if err != nil {
-		_, err1 := fmt.Fprintf(os.Stderr, "Error init logger level: %v", err)
-		if err1 != nil {
-			panic(err1)
-		}
+		fmt.Fprintf(os.Stderr, "init logger: %v", err)
 		os.Exit(1)
 	}
-
-	// Parsing log output
-	parsedLogOutput, closeFunc, err := log.ParseLogOutput(logOutput)
-	if closeFunc != nil {
-		defer closeFunc()
+	if closer != nil {
+		defer closer.Close()
 	}
-	if err != nil {
-		_, err1 := fmt.Fprintf(os.Stderr, "Error init logger output: %v", err)
-		if err1 != nil {
-			panic(err1)
-		}
-		os.Exit(1)
-	}
-
-	// Log initialisation
-	if err := log.InitLog(&log.Config{
-		Output: parsedLogOutput,
-		Level:  parsedLogLevel,
-	}); err != nil {
-		_, err1 := fmt.Fprintf(os.Stderr, "Error init logger: %v", err)
-		if err1 != nil {
-			panic(err1)
-		}
-		os.Exit(1)
-	}
-	log.Logger.SetHeader("${time_rfc3339} ${short_file}:${line} ${level} ${message}")
 
 	// Data initialisation
+	connStr := os.Getenv("DB_CONN_STRING")
 	if err := data.Init(connStr); err != nil {
 		log.Logger.Fatal(err)
 	}
 
 	// Server initialisation
+	port, err := strconv.Atoi(os.Getenv("SERVER_PORT"))
+	if err != nil {
+		log.Logger.Fatalf("parse SERVER_PORT: %v", err)
+	}
 	wgServer, err := StartServer(
 		&Config{
 			Port:       port,

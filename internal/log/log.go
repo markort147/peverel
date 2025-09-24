@@ -22,54 +22,44 @@ type Config struct {
 
 var Logger = glog.New("global")
 
-func InitLog(cfg *Config) error {
-	if err := fixConfig(cfg); err != nil {
-		return fmt.Errorf("log configuration error: %w", err)
-	}
-
-	Logger.SetLevel(cfg.Level)
-	Logger.SetOutput(cfg.Output)
-	return nil
-}
-
-func fixConfig(cfg *Config) error {
-	if cfg.Level == 0 {
-		cfg.Level = glog.INFO
-	}
-	if cfg.Output == nil {
-		cfg.Output = os.Stdout
-	}
-	return nil
-}
-
-func ParseLogLevel(level string) (glog.Lvl, error) {
-	switch level {
+func Init(levelStr, outputStr, headerStr string) (io.Closer, error) {
+	// parse level
+	var lvl glog.Lvl
+	switch levelStr {
 	case "debug":
-		return glog.DEBUG, nil
+		lvl = glog.DEBUG
 	case "info":
-		return glog.INFO, nil
+		lvl = glog.INFO
 	case "warn":
-		return glog.WARN, nil
+		lvl = glog.WARN
 	case "error":
-		return glog.ERROR, nil
+		lvl = glog.ERROR
 	case "off":
-		return glog.OFF, nil
+		lvl = glog.OFF
 	default:
-		return glog.OFF, fmt.Errorf("invalid log level")
+		return nil, fmt.Errorf("invalid log level %q", levelStr)
 	}
-}
 
-func ParseLogOutput(output string) (io.Writer, func(), error) {
-	switch output {
+	// parse output
+	var w io.Writer
+	var c io.Closer
+	switch outputStr {
 	case "stdout":
-		return os.Stdout, nil, nil
+		w = os.Stdout
 	case "stderr":
-		return os.Stderr, nil, nil
+		w = os.Stderr
 	default:
-		file, err := os.OpenFile(output, os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0666)
+		f, err := os.OpenFile(outputStr, os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0666)
 		if err != nil {
-			return os.Stdout, nil, fmt.Errorf("failed to open log file: %w", err)
+			return nil, fmt.Errorf("failed to open log file %q: %w", outputStr, err)
 		}
-		return file, func() { file.Close() }, nil
+		w = f
+		c = f
 	}
+
+	Logger.SetLevel(lvl)
+	Logger.SetOutput(w)
+	Logger.SetHeader(headerStr)
+
+	return c, nil
 }
