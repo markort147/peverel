@@ -51,8 +51,7 @@ func main() {
 	log.Logger.SetHeader("${time_rfc3339} ${short_file}:${line} ${level} ${message}")
 
 	// init data service
-	var data = &dt.SqliteData{}
-	data.Init(dbConnString, log.Logger)
+	dt.Init(dbConnString)
 
 	// init template
 	tmpl, err := template.New("templates").Parse(emailTmpl)
@@ -78,27 +77,27 @@ func main() {
 		// send the email after the initial duration
 		log.Logger.Infof("Waiting for next tick: %f mins", initialDuration.Minutes())
 		time.Sleep(initialDuration)
-		sendEmail(tmpl, data, emailSender, emailRecipients, smtpServer, smtpPort, smtpUsername, smtpPassword)
+		sendEmail(tmpl, emailSender, emailRecipients, smtpServer, smtpPort, smtpUsername, smtpPassword)
 		log.Logger.Infof("Waiting for next tick")
 
 		// set up a ticker to send the email every scheduledHours hours
 		ticker := time.NewTicker(time.Duration(scheduledHours) * time.Hour)
 		defer ticker.Stop()
 		for range ticker.C {
-			sendEmail(tmpl, data, emailSender, emailRecipients, smtpServer, smtpPort, smtpUsername, smtpPassword)
+			sendEmail(tmpl, emailSender, emailRecipients, smtpServer, smtpPort, smtpUsername, smtpPassword)
 			log.Logger.Infof("Waiting for next tick")
 		}
 	} else {
 		// if the scheduled time is not set, send the email immediately
-		sendEmail(tmpl, data, emailSender, emailRecipients, smtpServer, smtpPort, smtpUsername, smtpPassword)
+		sendEmail(tmpl, emailSender, emailRecipients, smtpServer, smtpPort, smtpUsername, smtpPassword)
 	}
 }
 
-func sendEmail(tmpl *template.Template, data *dt.SqliteData, emailSender string, emailRecipients []string, smtpServer string, smtpPort int, smtpUsername string, smtpPassword string) {
+func sendEmail(tmpl *template.Template, emailSender string, emailRecipients []string, smtpServer string, smtpPort int, smtpUsername string, smtpPassword string) {
 	// get the expired tasks
-	expiredTasks, err := data.Tasks("", "0", true)
+	expiredTasks, err := dt.Tasks("", "0", true)
 	if err != nil {
-		log.Logger.Errorf("Error getting expired tasks: %v", err)
+		log.Logger.Errorf("get expired tasks: %v", err)
 		return
 	}
 
@@ -110,7 +109,7 @@ func sendEmail(tmpl *template.Template, data *dt.SqliteData, emailSender string,
 		// build the tasks list
 		tasks := make([]map[string]string, 0)
 		for _, task := range expiredTasks {
-			group, _ := data.GetTaskGroupName(task.Id)
+			group, _ := dt.GetTaskGroupName(task.Id)
 			tasks = append(tasks, map[string]string{
 				"Name":        task.Name,
 				"Description": task.Description,

@@ -15,14 +15,13 @@ import (
 	"time"
 
 	"github.com/labstack/echo/v4/middleware"
-	"github.com/labstack/gommon/log"
+	"github.com/markor147/peverel/internal/log"
 
 	"github.com/labstack/echo/v4"
 )
 
 type Config struct {
 	Port           int
-	Logger         *log.Logger
 	FileSystem     fs.FS
 	RoutesRegister func(e *Echo)
 	CustomFuncs    FuncMap
@@ -38,9 +37,9 @@ func StartServer(cfg *Config) (*sync.WaitGroup, error) {
 	e := echo.New()
 	e.Use(middleware.LoggerWithConfig(middleware.LoggerConfig{
 		Format: "${time_rfc3339} ${method}${uri} ${status}(${error}) ${latency_human} ${bytes_in}b ${bytes_out}b\n",
-		Output: cfg.Logger.Output(),
+		Output: log.Logger.Output(),
 	}))
-	e.Logger.SetLevel(cfg.Logger.Level())
+	e.Logger.SetLevel(log.Logger.Level())
 	e.Use(middleware.Recover())
 
 	// serve index and register custom routes
@@ -59,7 +58,7 @@ func StartServer(cfg *Config) (*sync.WaitGroup, error) {
 	go func() {
 		defer wg.Done()
 		<-quit
-		cfg.Logger.Info("Shutting down the server")
+		log.Logger.Info("Shutting down the server")
 
 		// Create a context with a timeout to allow for graceful shutdown
 		ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
@@ -67,10 +66,10 @@ func StartServer(cfg *Config) (*sync.WaitGroup, error) {
 
 		// Attempt to gracefully shut down the server
 		if err := e.Shutdown(ctx); err != nil {
-			cfg.Logger.Error("Server forced to shutdown: ", err)
+			log.Logger.Error("Server forced to shutdown: ", err)
 		}
 
-		cfg.Logger.Info("Server exiting")
+		log.Logger.Info("Server exiting")
 	}()
 
 	// start the server

@@ -8,14 +8,12 @@ import (
 	"strconv"
 
 	"github.com/labstack/echo/v4"
-	dt "github.com/markor147/peverel/internal/data"
+	data "github.com/markor147/peverel/internal/data"
 	"github.com/markor147/peverel/internal/log"
 )
 
 //go:embed assets/*
 var assetsFS embed.FS
-
-var data = &dt.SqliteData{}
 
 func main() {
 
@@ -24,7 +22,7 @@ func main() {
 	logOutput := os.Getenv("LOG_OUTPUT")
 	connStr := os.Getenv("DB_CONN_STRING")
 
-	// log configuration
+	// Log initialisation
 	parsedLogLevel := log.ParseLogLevel(logLevel)
 	parsedLogOutput, closeFunc := log.ParseLogOutput(logOutput)
 	if closeFunc != nil {
@@ -42,12 +40,15 @@ func main() {
 	}
 	log.Logger.SetHeader("${time_rfc3339} ${short_file}:${line} ${level} ${message}")
 
-	data.Init(connStr, log.Logger)
+	// Data initialisation
+	if err := data.Init(connStr); err != nil {
+		log.Logger.Fatal(err)
+	}
 
+	// Server initialisation
 	wgServer, err := StartServer(
 		&Config{
 			Port:       port,
-			Logger:     log.Logger,
 			FileSystem: assetsFS,
 			RoutesRegister: func(e *Echo) {
 				e.GET("/", func(c echo.Context) error {
@@ -95,7 +96,6 @@ func main() {
 				e.PUT("/task/:id/unassign", PutTaskUnassign)
 				e.DELETE("/task/:id", DeleteTask)
 				e.DELETE("/group/:id", DeleteGroup)
-				e.POST("/tasks/mock", CreateMockTasks)
 				e.PUT("/group/:id/assign", PutGroupAssignTask)
 				e.GET("/tasks/count", GetTasksCount)
 				e.GET("/modal/inactive", GetModalInactive)
@@ -106,6 +106,5 @@ func main() {
 		log.Logger.Fatalf("Error starting server: %v", err)
 	}
 	defer log.Logger.Info("Server exited")
-
 	wgServer.Wait()
 }
