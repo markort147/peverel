@@ -22,12 +22,30 @@ func main() {
 	logOutput := os.Getenv("LOG_OUTPUT")
 	connStr := os.Getenv("DB_CONN_STRING")
 
-	// Log initialisation
-	parsedLogLevel := log.ParseLogLevel(logLevel)
-	parsedLogOutput, closeFunc := log.ParseLogOutput(logOutput)
+	// Parsing log level
+	parsedLogLevel, err := log.ParseLogLevel(logLevel)
+	if err != nil {
+		_, err1 := fmt.Fprintf(os.Stderr, "Error init logger level: %v", err)
+		if err1 != nil {
+			panic(err1)
+		}
+		os.Exit(1)
+	}
+
+	// Parsing log output
+	parsedLogOutput, closeFunc, err := log.ParseLogOutput(logOutput)
 	if closeFunc != nil {
 		defer closeFunc()
 	}
+	if err != nil {
+		_, err1 := fmt.Fprintf(os.Stderr, "Error init logger output: %v", err)
+		if err1 != nil {
+			panic(err1)
+		}
+		os.Exit(1)
+	}
+
+	// Log initialisation
 	if err := log.InitLog(&log.Config{
 		Output: parsedLogOutput,
 		Level:  parsedLogLevel,

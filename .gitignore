@@ -3,3 +3,4 @@
 /dev/
 /.env
 /db/
+log.json

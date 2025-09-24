@@ -55,6 +55,8 @@ func GetTasks(c echo.Context) error {
 	days := c.QueryParam("days")
 	expired := c.QueryParam("expired") != "false"
 
+	log.Logger.Debugf("functions GetTask params: (group: %v, days: %v, expired: %v)", groupId, days, expired)
+
 	tasks, err := data.Tasks(groupId, days, expired)
 	if err != nil {
 		return err

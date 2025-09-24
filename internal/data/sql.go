@@ -3,6 +3,7 @@ package data
 import (
 	"database/sql"
 	_ "embed"
+	"errors"
 	"fmt"
 	"time"
 
@@ -15,22 +16,43 @@ var schema string
 
 var db *sql.DB
 
-// Init opens or creates a SQLite DB file.
+// Init opens or creates a SQLite DB file and runs the schema.
 // Example connStr: "./tasks.db"
 func Init(connStr string) error {
 	log.Logger.Debugf("opening database connection %q", connStr)
 
-	// Open connection
-	db, err := sql.Open("sqlite3", connStr)
+	if connStr == "" {
+		return errors.New("connStr is empty")
+	}
+
+	// Use a temporary handle so the global `db` is only assigned
+	// if every step below succeeds. This avoids leaving a broken
+	// connection in the global on error.
+	dbtmp, err := sql.Open("sqlite3", connStr)
 	if err != nil {
-		return fmt.Errorf("init db: %w", err)
+		return fmt.Errorf("open sqlite: %w", err)
 	}
 
-	// Initialise schema
-	if _, err := db.Exec(string(schema)); err != nil {
-		return fmt.Errorf("init db: %w", err)
+	// Enforce foreign keys and set busy timeout.
+	if _, err := dbtmp.Exec(`PRAGMA foreign_keys=ON; PRAGMA busy_timeout=5000;`); err != nil {
+		_ = dbtmp.Close()
+		return fmt.Errorf("pragma: %w", err)
 	}
 
+	// Actually test the connection. sql.Open alone does not.
+	if err := dbtmp.Ping(); err != nil {
+		_ = dbtmp.Close()
+		return fmt.Errorf("ping: %w", err)
+	}
+
+	// Initialise schema (CREATE TABLE IF NOT EXISTS …). Safe to run repeatedly.
+	if _, err := dbtmp.Exec(string(schema)); err != nil {
+		return fmt.Errorf("init schema: %w", err)
+	}
+
+	// At this point everything succeeded: promote the temp handle
+	// to the global variable so the rest of the package can use it.
+	db = dbtmp
 	return nil
 }
 
@@ -225,6 +247,9 @@ func Tasks(groupId string, days string, expired bool) ([]Task, error) {
 		query += " WHERE " + joinAND(conds)
 	}
 	query += ` ORDER BY DATE(last_completed, '+' || period || ' days');`
+
+	log.Logger.Debugf("function data.Tasks query: %v", query)
+	log.Logger.Debugf("function data.Tasks args: %v", args)
 
 	rows, err := db.Query(query, args...)
 	if err != nil {
