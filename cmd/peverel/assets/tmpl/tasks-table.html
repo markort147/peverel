@@ -7,8 +7,8 @@
             <td id="next-time-{{ .Id }}" hx-get="task/{{ .Id }}/next-time" hx-swap="innerHTML" hx-trigger="load"
                 hx-target="#next-time-{{ .Id }}"></td>
             <td>
-                <button class="task-table-button task-confirm-button" title="mark as completed" hx-put="task/{{ .Id }}/complete"
-                    hx-target="closest .tasks-table-compact" hx-swap="outerHTML">
+                <button class="task-table-button task-confirm-button" title="mark as completed"
+                    hx-put="task/{{ .Id }}/complete" hx-target="closest .tasks-table-compact" hx-swap="outerHTML">
                     <span>
                         <i class="fas fa-circle-check"></i>
                     </span>
@@ -19,10 +19,10 @@
                     </span>
                 </button>
                 <div popover class="task-desc" id="popover-{{.Id}}">
-                    <p><b>Group:</b>
+                    <!-- <p><b>Group:</b>
                         <span hx-get="task/{{ .Id }}/group/name" hx-swap="innerHTML"
                             hx-trigger="revealed" hx-target="this"></span>
-                    </p>
+                    </p> -->
                     <p><b>Frequency:</b>
                         <span>Every {{.Period}} days</span>
                     </p>

@@ -138,14 +138,25 @@ main {
     color: var(--accent);
 }
 
-#form-add-task button {
+.task-form {
+    display: flex;
+    flex-direction: column;
+}
+
+.task-form-item {
+    margin: 10px;
+}
+
+.task-form button {
     background-color: inherit;
     cursor: pointer;
     border: none;
     font-size: x-large;
+    margin: 15px;
     padding: 5px;
 }
 
-#form-add-task button:hover {
+.task-form button:hover {
     color: var(--accent);
 }
+

@@ -11,6 +11,53 @@ import (
 	"github.com/markor147/peverel/internal/log"
 )
 
+func GetLayoutHome(c echo.Context) error {
+	return c.Render(http.StatusOK, "layout", map[string]string{
+		"Title":   "peverel - home",
+		"Content": "home",
+	})
+}
+
+func GetPageHome(c echo.Context) error {
+	return c.Render(http.StatusOK, "page/home", nil)
+}
+
+func GetLayoutSettings(c echo.Context) error {
+	return c.Render(http.StatusOK, "layout", map[string]string{
+		"Title":   "peverel - settings",
+		"Content": "settings",
+	})
+}
+
+func GetPageSettings(c echo.Context) error {
+	return c.Render(http.StatusOK, "page/settings", nil)
+}
+
+func GetLayoutAddTask(c echo.Context) error {
+	return c.Render(http.StatusOK, "layout", map[string]string{
+		"Title":   "peverel - new task",
+		"Content": "add-task",
+	})
+}
+
+func GetPageAddTask(c echo.Context) error {
+	return c.Render(http.StatusOK, "page/add-task", nil)
+}
+
+func GetLayoutEditTask(c echo.Context) error {
+	taskId := c.QueryParam("id")
+	return c.Render(http.StatusOK, "layout", map[string]string{
+		"Title":   "peverel - edit task " + taskId,
+		"Content": "edit-task?id=" + taskId,
+	})
+}
+
+func GetPageEditTask(c echo.Context) error {
+	taskId, _ := strconv.Atoi(c.QueryParam("id"))
+	task, _ := data.GetTask(data.TaskId(taskId))
+	return c.Render(http.StatusOK, "page/edit-task", task)
+}
+
 func GetNewTaskForm(c echo.Context) error {
 	return c.Render(http.StatusOK, "task-form", nil)
 }
@@ -69,10 +116,8 @@ func GetTasks(c echo.Context) error {
 		template = "tasks-options"
 	case "table":
 		template = "tasks-table"
-	case "levels":
-		template = "tasks-levels"
 	default:
-		template = "tasks-levels"
+		template = "tasks-table"
 	}
 
 	return c.Render(http.StatusOK, template, tasks)

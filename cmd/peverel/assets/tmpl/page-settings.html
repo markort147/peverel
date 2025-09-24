@@ -2,12 +2,17 @@
 <h1 class="brand">settings</h1>
 
 <div id="settings-buttons">
-    <button onclick="location.href='settings/add-task'" type="button">
+    <button id="add-task-btn" onclick="location.href='settings/add-task'" type="button">
         <span><i class="fas fa-plus"></i> Add a task</span>
     </button>
 
-    <button onclick="location.href='settings/edit-task'" type="button">
+    <button>
         <span><i class="fas fa-pen"></i> Edit a task</span>
     </button>
+    <select id="edit-task-selector" onchange="if (this.value != '') {location.href='/settings/edit-task?id=' + this.value}" >
+        <option value="" selected>Select a task...</option>
+        <option hx-get="/tasks?layout=options" hx-trigger="load" hx-swap="outerHTML"></option>
+    </select>
+
 </div>
 {{ end }}

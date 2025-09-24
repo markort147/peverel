@@ -1,19 +1,19 @@
-{{define "page/add-task"}}
-<form class="task-form" id="form-add-task" hx-post="/task" hx-swap="none">
+{{define "page/edit-task"}}
+<form class="task-form" id="form-edit-task" hx-put="/task/{{ .Id }}" hx-swap="none">
 
     <div class="task-form-item">
         <label class="label" for="name">Name</label>
-        <input class="input" type="text" name="name" id="name">
+        <input class="input" type="text" name="name" id="name" value="{{ .Name }}">
     </div>
 
     <div class="task-form-item">
         <label class="label" for="description">Description</label>
-        <input class="input" type="text" name="description" id="description">
+        <input class="input" type="text" name="description" id="description" value="{{ .Description }}">
     </div>
 
     <div class="task-form-item">
         <label class="label" for="period">Period (days)</label>
-        <input class="input" type="number" name="period" id="period">
+        <input class="input" type="number" name="period" id="period" value="{{ .Period }}">
     </div>
 
     <!-- <div class="task-form-item">

@@ -3,11 +3,9 @@ package main
 import (
 	"embed"
 	"fmt"
-	"net/http"
 	"os"
 	"strconv"
 
-	"github.com/labstack/echo/v4"
 	data "github.com/markor147/peverel/internal/data"
 	"github.com/markor147/peverel/internal/log"
 )
@@ -45,36 +43,14 @@ func main() {
 			Port:       port,
 			FileSystem: assetsFS,
 			RoutesRegister: func(e *Echo) {
-				e.GET("/", func(c echo.Context) error {
-					return c.Render(http.StatusOK, "layout", map[string]string{
-						"Title":   "peverel - home",
-						"Content": "home",
-					})
-				})
-				e.GET("/page/home", func(c echo.Context) error {
-					return c.Render(http.StatusOK, "page/home", nil)
-				})
-				e.GET("/settings", func(c echo.Context) error {
-					return c.Render(http.StatusOK, "layout", map[string]string{
-						"Title":   "peverel - settings",
-						"Content": "settings",
-					})
-				})
-				e.GET("/page/settings", func(c echo.Context) error {
-					return c.Render(http.StatusOK, "page/settings", nil)
-				})
-				e.GET("/settings/add-task", func(c echo.Context) error {
-					return c.Render(http.StatusOK, "layout", map[string]string{
-						"Title":   "peverel - new task",
-						"Content": "add-task",
-					})
-				})
-				e.GET("/page/add-task", func(c echo.Context) error {
-					return c.Render(http.StatusOK, "page/add-task", nil)
-				})
-				e.GET("empty-string", func(c echo.Context) error {
-					return c.String(http.StatusOK, "")
-				})
+				e.GET("/", GetLayoutHome)
+				e.GET("/page/home", GetPageHome)
+				e.GET("/settings", GetLayoutSettings)
+				e.GET("/page/settings", GetPageSettings)
+				e.GET("/settings/add-task", GetLayoutAddTask)
+				e.GET("/page/add-task", GetPageAddTask)
+				e.GET("/settings/edit-task", GetLayoutEditTask)
+				e.GET("/page/edit-task", GetPageEditTask)
 				e.GET("/forms/new-task", GetNewTaskForm)
 				e.GET("/forms/edit-task", GetEditTaskForm)
 				e.GET("/forms/new-group", GetNewGroupForm)
@@ -93,6 +69,9 @@ func main() {
 				e.PUT("/group/:id/assign", PutGroupAssignTask)
 				e.GET("/tasks/count", GetTasksCount)
 				e.GET("/modal/inactive", GetModalInactive)
+				/*e.GET("empty-string", func(c echo.Context) error {
+					return c.String(http.StatusOK, "")
+				})*/
 			},
 		},
 	)
@@ -101,4 +80,6 @@ func main() {
 	}
 	defer log.Logger.Info("Server exited")
 	wgServer.Wait()
+
+	os.Exit(0)
 }
