@@ -43,35 +43,43 @@ func main() {
 			Port:       port,
 			FileSystem: assetsFS,
 			RoutesRegister: func(e *Echo) {
+				// Index
 				e.GET("/", GetLayoutHome)
+
+				// Pages
 				e.GET("/page/home", GetPageHome)
-				e.GET("/settings", GetLayoutSettings)
 				e.GET("/page/settings", GetPageSettings)
-				e.GET("/settings/add-task", GetLayoutAddTask)
 				e.GET("/page/add-task", GetPageAddTask)
-				e.GET("/settings/edit-task", GetLayoutEditTask)
 				e.GET("/page/edit-task", GetPageEditTask)
-				e.GET("/forms/new-task", GetNewTaskForm)
-				e.GET("/forms/edit-task", GetEditTaskForm)
-				e.GET("/forms/new-group", GetNewGroupForm)
-				e.GET("/groups", GetGroups)
+
+				// Settings
+				e.GET("/settings", GetLayoutSettings)
+				e.GET("/settings/add-task", GetLayoutAddTask)
+				e.GET("/settings/edit-task", GetLayoutEditTask)
+
+				// Tasks
 				e.GET("/tasks", GetTasks)
+
+				// Task
 				e.GET("/task/:id/next-time", GetTaskNextTime)
 				e.POST("/task", PostTask)
-				e.PUT("/task/:id", PutTask)
-				e.GET("/modal/task-info", GetModalTaskInfo)
-				e.GET("/task/:id/group/name", GetTaskGroupName)
-				e.POST("/group", PostGroup)
-				e.PUT("/task/:id/complete", PutTaskComplete)
-				e.PUT("/task/:id/unassign", PutTaskUnassign)
 				e.DELETE("/task/:id", DeleteTask)
-				e.DELETE("/group/:id", DeleteGroup)
-				e.PUT("/group/:id/assign", PutGroupAssignTask)
-				e.GET("/tasks/count", GetTasksCount)
-				e.GET("/modal/inactive", GetModalInactive)
-				/*e.GET("empty-string", func(c echo.Context) error {
-					return c.String(http.StatusOK, "")
-				})*/
+				e.PUT("/task/:id", PutTask)
+				e.PUT("/task/:id/complete", PutTaskComplete)
+
+				/* === Unused === */
+				// e.GET("/forms/new-task", GetNewTaskForm)
+				// e.GET("/forms/edit-task", GetEditTaskForm)
+				// e.GET("/forms/new-group", GetNewGroupForm)
+				// e.GET("/groups", GetGroups)
+				// e.GET("/modal/task-info", GetModalTaskInfo)
+				// e.GET("/task/:id/group/name", GetTaskGroupName)
+				// e.POST("/group", PostGroup)
+				// e.PUT("/task/:id/unassign", PutTaskUnassign)
+				// e.DELETE("/group/:id", DeleteGroup)
+				// e.PUT("/group/:id/assign", PutGroupAssignTask)
+				// e.GET("/tasks/count", GetTasksCount)
+				// e.GET("/modal/inactive", GetModalInactive)
 			},
 		},
 	)

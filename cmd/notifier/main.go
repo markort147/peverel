@@ -91,7 +91,7 @@ func main() {
 }
 
 func sendEmail(tmpl *template.Template, emailSender string, emailRecipients []string, smtpServer string, smtpPort int, smtpUsername string, smtpPassword string) {
-	// Fet the expired tasks
+	// Fetch the expired tasks
 	expiredTasks, err := dt.Tasks("", "0", true)
 	if err != nil {
 		log.Logger.Errorf("get expired tasks: %v", err)
@@ -106,11 +106,11 @@ func sendEmail(tmpl *template.Template, emailSender string, emailRecipients []st
 		// Build the tasks list
 		tasks := make([]map[string]string, 0)
 		for _, task := range expiredTasks {
-			group, _ := dt.GetTaskGroupName(task.Id)
+			// group, _ := dt.GetTaskGroupName(task.Id)
 			tasks = append(tasks, map[string]string{
 				"Name":        task.Name,
 				"Description": task.Description,
-				"Group":       group,
+				// "Group":       group,
 			})
 		}
 

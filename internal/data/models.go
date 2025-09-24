@@ -12,9 +12,9 @@ type Task struct {
 
 type TaskId int
 
-type Group struct {
+/*type Group struct {
 	Id   GroupId
 	Name string
-}
+}*/
 
-type GroupId int
+// type GroupId int

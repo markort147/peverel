@@ -5,7 +5,7 @@
 <p>Here are the expired tasks:</p>
 <ul>
     {{ range .Tasks }}
-    <li>{{ .Name }} ({{ .Group }}) - {{ .Description }}</li>
+    <li>{{ .Name }}: {{ .Description }}</li>
     {{ end }}
 </ul>
 <p>To update the tasks, please visit <a href="http://raspberrypi.local/peverel">raspberrypi.local/peverel</a> while connected to our home Wi-Fi.</p>
