@@ -1,4 +1,6 @@
-{{define "page/add-task"}}
+{{define "title"}}new task{{end}}
+
+{{define "content"}}
 <form class="task-form" id="form-add-task" hx-post="/task" hx-swap="none">
 
     <div class="task-form-item">
@@ -15,14 +17,6 @@
         <label class="label" for="period">Period (days)</label>
         <input class="input" type="number" name="period" id="period">
     </div>
-
-    <!-- <div class="task-form-item">
-        <label class="label" for="group-select">Group</label>
-        <select id="group-select" name="group">
-            <option value="" selected>Select a group...</option>
-            <option hx-get="/groups?layout=options" hx-trigger="load" hx-swap="outerHTML"></option>
-        </select>
-    </div> -->
 
     <div class="task-form-item">
         <button type="submit">

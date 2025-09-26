@@ -1,0 +1,37 @@
+{{ define "title" }}home{{end}}
+
+{{ define "content" }}
+<h1 class="brand">tasks</h1>
+<table class="tasks-table-compact">
+    <tbody>
+        {{ range . }}
+        <tr>
+            <td>{{ .Name }}</td>
+            <td id="next-time-{{ .Id }}" hx-get="task/{{ .Id }}/next-time" hx-swap="innerHTML" hx-trigger="load"
+                hx-target="#next-time-{{ .Id }}"></td>
+            <td>
+                <button class="task-table-button task-confirm-button" title="mark as completed"
+                    hx-put="task/{{ .Id }}/complete" hx-target="closest .tasks-table-compact" hx-swap="outerHTML">
+                    <span>
+                        <i class="fas fa-circle-check"></i>
+                    </span>
+                </button>
+                <button class="task-table-button task-info-button" title="description" popovertarget="popover-{{.Id}}">
+                    <span>
+                        <i class="fas fa-circle-info"></i>
+                    </span>
+                </button>
+                <div popover class="task-desc" id="popover-{{.Id}}">
+                    <p><b>Frequency:</b>
+                        <span>Every {{.Period}} days</span>
+                    </p>
+                    <p><b>Description:</b>
+                        <span>{{.Description}}</span>
+                    </p>
+                </div>
+            </td>
+        </tr>
+        {{ end }}
+    </tbody>
+</table>
+{{ end }}
